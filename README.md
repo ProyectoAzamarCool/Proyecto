@@ -7,4 +7,5 @@ Main es la rama que tendra el producto "final" en todo momento, es decir, que to
 develop: es la rama donde se probaran todas las adiciones hechas en un determinado tiempo, cada rama que se cree debe tener a develop como rama de origen, por el contrario nos podría cargar la verga.
 
 
-#Commit de Daniel, osea, YO
+
+#Commit de Daniel
