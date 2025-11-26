@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "716583851902",
+    "project_id": "login-cas",
+    "storage_bucket": "login-cas.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:716583851902:android:d816f0a67a1e8be098452f",
+        "android_client_info": {
+          "package_name": "com.example.azamar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBUJiV5QqDyHHkyyCLlpSoU_sj-nRm3kw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
