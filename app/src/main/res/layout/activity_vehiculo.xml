@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gris_fondo">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtVehiculoTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Datos del Vehículo"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/azul_oscuro"
+            android:layout_marginBottom="20dp" />
+
+        <EditText
+            android:id="@+id/editModelo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Modelo"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <EditText
+            android:id="@+id/editVin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="VIN"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <EditText
+            android:id="@+id/editPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Placa"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <EditText
+            android:id="@+id/editFechaVehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Año/fecha (YYYY-MM-DD)"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <Button
+            android:id="@+id/btnGuardar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Guardar vehículo"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/azul_medio"
+            android:textColor="@color/blanco" />
+
+    </LinearLayout>
+
+</ScrollView>
