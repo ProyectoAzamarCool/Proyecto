@@ -1,5 +1,6 @@
 package com.example.azamar
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -17,28 +18,25 @@ class RegisterActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        val email = findViewById<EditText>(R.id.emailInput)
-        val password = findViewById<EditText>(R.id.passwordInput)
-        val registerBtn = findViewById<Button>(R.id.registerBtn)
+        val email = findViewById<EditText>(R.id.editEmail)
+        val password = findViewById<EditText>(R.id.editPassword)
+        val btnRegister = findViewById<Button>(R.id.btnRegister)
 
-        registerBtn.setOnClickListener {
-            val emailText = email.text.toString().trim()
-            val passText = password.text.toString().trim()
+        btnRegister.setOnClickListener {
 
-            if (emailText.isEmpty() || passText.isEmpty()) {
-                Toast.makeText(this, "Completa los campos", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            auth.createUserWithEmailAndPassword(
+                email.text.toString(),
+                password.text.toString()
+            ).addOnCompleteListener { task ->
 
-            auth.createUserWithEmailAndPassword(emailText, passText)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "Usuario creado", Toast.LENGTH_SHORT).show()
-                        finish()
-                    } else {
-                        Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
-                    }
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Cuenta creada", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, DatosPersonalesActivity::class.java))
+                    finish()
+                } else {
+                    Toast.makeText(this, "Error al registrar", Toast.LENGTH_SHORT).show()
                 }
+            }
         }
     }
 }
