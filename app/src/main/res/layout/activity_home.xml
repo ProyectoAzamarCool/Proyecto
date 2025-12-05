@@ -1,18 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azul_oscuro"
-    android:padding="25dp">
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
-    <TextView
-        android:id="@+id/welcomeText"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/azul_oscuro">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chat_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/message_input_layout"
+            android:padding="16dp" />
+
+        <RelativeLayout
+            android:id="@+id/message_input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/black"
+            android:padding="8dp">
+
+            <ImageButton
+                android:id="@+id/send_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Enviar"
+                android:src="@android:drawable/ic_menu_send"
+                app:tint="@color/ambar" />
+
+            <ImageButton
+                android:id="@+id/voice_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/send_button"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Entrada de voz"
+                android:src="@android:drawable/ic_btn_speak_now"
+                app:tint="@color/ambar" />
+
+            <EditText
+                android:id="@+id/message_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/voice_button"
+                android:hint="Escribe un mensaje..."
+                android:inputType="textMultiLine"
+                android:maxLines="4"
+                android:textColor="@color/blanco"
+                android:textColorHint="@color/blanco" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Bienvenido"
-        android:textColor="@color/blanco"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true" />
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" />
 
-</RelativeLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
