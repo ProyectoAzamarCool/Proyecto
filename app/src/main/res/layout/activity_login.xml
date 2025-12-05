@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Asistente Legal Automotriz"
+            android:text="ASISTENTE LEGAL AUTOMOTRIZ"
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/azul_oscuro"
@@ -37,6 +37,16 @@
             android:background="@drawable/rounded_input"
             android:padding="12dp" />
 
+        <!-- BOTÓN OLVIDÓ CONTRASEÑA -->
+        <TextView
+            android:id="@+id/btnForgot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Olvidaste tu contraseña?"
+            android:textColor="@color/azul_medio"
+            android:layout_marginTop="15dp" />
+
+
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
@@ -54,6 +64,17 @@
             android:layout_marginTop="15dp"
             android:backgroundTint="@color/ambar"
             android:textColor="@color/azul_oscuro" />
+
+
+        <!-- BOTÓN GOOGLE -->
+        <Button
+            android:id="@+id/btnGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Iniciar con Google"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/rojo_google"
+            android:textColor="@color/blanco" />
 
     </LinearLayout>
 
