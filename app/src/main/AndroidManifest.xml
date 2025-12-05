@@ -25,17 +25,22 @@
             </intent-filter>
         </activity>
 
-        <!-- Pantalla de registro -->
+        <!-- Pantalla de registro de usuario -->
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
 
-        <!-- Pantalla de perfil -->
+        <!-- Pantalla de perfil de usuario -->
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
+            
+        <!-- Pantalla de registro de vehiculo -->
+        <activity
+            android:name=".VehiculoActivity"
+            android:exported="false" />
 
-        <!-- Pantalla principal después del login (si la usas) -->
+        <!-- Pantalla principal después del login -->
         <activity
             android:name=".HomeActivity"
             android:exported="false" />

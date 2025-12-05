@@ -1,5 +1,6 @@
 package com.example.azamar
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -118,7 +119,8 @@ class ProfileActivity : AppCompatActivity() {
                 val response = apiService.getPerfil(token)
                 if (response.isSuccessful) {
                     currentUser = response.body()
-                    currentUser?.let { showPerfil(it) }
+                    // Si el usuario ya existe, lo mandamos a la pantalla de vehículo directamente
+                    goToVehiculoActivity()
                 } else if (response.code() == 404) {
                     showFormularioCreacion()
                 }
@@ -127,15 +129,6 @@ class ProfileActivity : AppCompatActivity() {
                 Toast.makeText(this@ProfileActivity, "Error al cargar perfil: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    private fun showPerfil(usuario: Usuario) {
-        nombreText.text = "${usuario.nombre} ${usuario.apellidoPaterno} ${usuario.apellidoMaterno}"
-        fechaText.text = usuario.fechaNacimiento
-        telefonoText.text = usuario.telefono
-
-        profileFormContainer.visibility = View.GONE
-        profileViewContainer.visibility = View.VISIBLE
     }
 
     private fun showFormularioCreacion() {
@@ -185,10 +178,9 @@ class ProfileActivity : AppCompatActivity() {
                 }
 
                 if (response.isSuccessful) {
-                    currentUser = response.body()
-                    currentUser?.let { showPerfil(it) }
-                    val message = if (currentUser?.idUsuario == usuario.idUsuario) "Perfil Actualizado" else "Perfil Creado"
+                    val message = if (currentUser == null) "Perfil Creado" else "Perfil Actualizado"
                     Toast.makeText(this@ProfileActivity, message, Toast.LENGTH_SHORT).show()
+                    goToVehiculoActivity()
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Error desconocido"
                     Log.e("ProfileActivity", "Fallo al guardar. Código: ${response.code()}, Mensaje: $errorBody")
@@ -207,6 +199,12 @@ class ProfileActivity : AppCompatActivity() {
         apellidoMatInput.text?.clear()
         fechaInput.text?.clear()
         telefonoInput.text?.clear()
+    }
+
+    private fun goToVehiculoActivity() {
+        val intent = Intent(this, VehiculoActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun getStoredToken(): String {
