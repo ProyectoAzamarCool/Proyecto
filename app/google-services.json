@@ -12,7 +12,20 @@
           "package_name": "com.example.azamar"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "716583851902-lhfi24ug3ipqo2g8dli0v2t9ojcd2qfp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.azamar",
+            "certificate_hash": "273de87c7de9326235d86f7ecb05522f57b066a2"
+          }
+        },
+        {
+          "client_id": "716583851902-ubslpfegiuuvj8kij90e0ts4oi3s7b1f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBBUJiV5QqDyHHkyyCLlpSoU_sj-nRm3kw"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "716583851902-ubslpfegiuuvj8kij90e0ts4oi3s7b1f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -1,5 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- ID del cliente web de Firebase -->
     <string-array name="firebase_web_client_id">
         <item>@string/default_web_client_id</item>
     </string-array>
+
+    <!-- Tipos de vehículo -->
+    <string-array name="tipos_vehiculo">
+        <item>Automóvil</item>
+        <item>SUV</item>
+        <item>Pickup</item>
+        <item>Motocicleta</item>
+        <item>Camión</item>
+    </string-array>
+
+    <!-- Servicios requeridos -->
+    <string-array name="servicios_requeridos">
+        <item>Asesoría legal</item>
+        <item>Reporte de accidente</item>
+        <item>Revisión de documentos</item>
+        <item>Trámite vehicular</item>
+        <item>Otro</item>
+    </string-array>
+
 </resources>
