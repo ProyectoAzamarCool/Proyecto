@@ -42,7 +42,7 @@ class DatosPersonalesActivity : AppCompatActivity() {
             )
 
             val request = Request.Builder()
-                .url("https://TU_API/usuario/datos-personales")
+                .url("https://api-bqajzo735a-uc.a.run.app/info-usuario")
                 .post(body)
                 .build()
 

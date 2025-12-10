@@ -2,7 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,7 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Azamar">
 
-        <!-- Pantalla principal (LOGIN) -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+
+        <!-- LOGIN ES LA ACTIVIDAD PRINCIPAL -->
         <activity
             android:name=".LoginActivity"
             android:exported="true">
@@ -22,9 +30,19 @@
             </intent-filter>
         </activity>
 
-        <!-- Pantalla de registro -->
+        <!-- Pantalla de registro de usuario -->
         <activity
             android:name=".RegisterActivity"
+            android:exported="false" />
+
+        <!-- Pantalla de perfil de usuario -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+            
+        <!-- Pantalla de registro de vehiculo -->
+        <activity
+            android:name=".VehiculoActivity"
             android:exported="false" />
 
         <!-- Pantalla principal después del login -->
@@ -33,5 +51,4 @@
             android:exported="false" />
 
     </application>
-
 </manifest>
