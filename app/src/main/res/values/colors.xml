@@ -4,4 +4,6 @@
     <color name="ambar">#FFB800</color>
     <color name="gris_fondo">#F2F2F2</color>
     <color name="blanco">#FFFFFF</color>
+    <color name="rojo_google">#DB4437</color>
+
 </resources>

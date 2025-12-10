@@ -20,6 +20,7 @@
             android:textColor="@color/azul_oscuro"
             android:layout_marginBottom="20dp" />
 
+        <!-- MODELO -->
         <EditText
             android:id="@+id/editModelo"
             android:layout_width="match_parent"
@@ -28,6 +29,7 @@
             android:background="@drawable/rounded_input"
             android:padding="12dp" />
 
+        <!-- VIN -->
         <EditText
             android:id="@+id/editVin"
             android:layout_width="match_parent"
@@ -37,6 +39,7 @@
             android:background="@drawable/rounded_input"
             android:padding="12dp" />
 
+        <!-- PLACA -->
         <EditText
             android:id="@+id/editPlaca"
             android:layout_width="match_parent"
@@ -46,6 +49,7 @@
             android:background="@drawable/rounded_input"
             android:padding="12dp" />
 
+        <!-- FECHA -->
         <EditText
             android:id="@+id/editFechaVehiculo"
             android:layout_width="match_parent"
@@ -55,6 +59,61 @@
             android:background="@drawable/rounded_input"
             android:padding="12dp" />
 
+        <!-- ¿EL VEHÍCULO ES PROPIO? -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="¿El vehículo es propio?"
+                android:textSize="16sp"
+                android:textColor="@color/azul_oscuro" />
+
+            <Switch
+                android:id="@+id/switchVehiculoPropio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- TIPO DE VEHÍCULO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de vehículo"
+            android:textSize="16sp"
+            android:textColor="@color/azul_oscuro"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:id="@+id/spinnerTipoVehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_input"
+            android:padding="8dp" />
+
+        <!-- SERVICIO REQUERIDO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Servicio requerido"
+            android:textSize="16sp"
+            android:textColor="@color/azul_oscuro"
+            android:layout_marginTop="20dp" />
+
+        <Spinner
+            android:id="@+id/spinnerServicio"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_input"
+            android:padding="8dp" />
+
+        <!-- BOTÓN GUARDAR -->
         <Button
             android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
