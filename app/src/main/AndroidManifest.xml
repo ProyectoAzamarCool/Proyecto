@@ -5,7 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="false"
+        android:usesCleartextTraffic="true"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -27,12 +30,25 @@
             </intent-filter>
         </activity>
 
-        <!-- OTRAS ACTIVITIES -->
-        <activity android:name=".RegisterActivity" android:exported="false" />
-        <activity android:name=".RecoverPasswordActivity" android:exported="false" />
-        <activity android:name=".HomeActivity" android:exported="false" />
-        <activity android:name=".DatosPersonalesActivity" android:exported="false" />
-        <activity android:name=".VehiculoActivity" android:exported="false" />
+        <!-- Pantalla de registro de usuario -->
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+
+        <!-- Pantalla de perfil de usuario -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+            
+        <!-- Pantalla de registro de vehiculo -->
+        <activity
+            android:name=".VehiculoActivity"
+            android:exported="false" />
+
+        <!-- Pantalla principal después del login -->
+        <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
 
     </application>
 </manifest>
