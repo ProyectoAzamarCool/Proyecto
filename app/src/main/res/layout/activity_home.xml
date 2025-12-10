@@ -1,18 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azul_oscuro"
-    android:padding="25dp">
+    android:padding="16dp"
+    tools:context=".HomeActivity">
 
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Bienvenido"
-        android:textColor="@color/blanco"
-        android:textSize="26sp"
-        android:textStyle="bold"
-        android:layout_centerInParent="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        tools:text="Hola usuario, bienvenido." />
+
+    <Button
+        android:id="@+id/gemini_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcomeText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Generar Saludo" />
+
+    <TextView
+        android:id="@+id/gemini_response_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/gemini_button"
+        android:layout_marginTop="20dp"
+        android:textSize="16sp"
+        tools:text="Respuesta de Gemini aquí." />
 
 </RelativeLayout>
