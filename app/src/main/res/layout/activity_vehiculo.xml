@@ -1,95 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@color/gris_fondo">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        tools:context=".VehiculoActivity">
+        android:padding="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <TextView
+            android:id="@+id/txtVehiculoTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Datos del Vehículo"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="@color/azul_oscuro"
+            android:layout_marginBottom="20dp" />
+
+        <!-- MODELO -->
+        <EditText
+            android:id="@+id/editModelo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Modelo"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <!-- VIN -->
+        <EditText
+            android:id="@+id/editVin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="VIN"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <!-- PLACA -->
+        <EditText
+            android:id="@+id/editPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Placa"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <!-- FECHA -->
+        <EditText
+            android:id="@+id/editFechaVehiculo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Año/fecha (YYYY-MM-DD)"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
+
+        <!-- ¿EL VEHÍCULO ES PROPIO? -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="¿El vehículo es propio?"
+                android:textSize="16sp"
+                android:textColor="@color/azul_oscuro" />
+
+            <Switch
+                android:id="@+id/switchVehiculoPropio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- TIPO DE VEHÍCULO -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Registra tu Vehículo"
-            android:textAppearance="?attr/textAppearanceHeadline5" />
+            android:text="Tipo de vehículo"
+            android:textSize="16sp"
+            android:textColor="@color/azul_oscuro"
+            android:layout_marginTop="20dp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="Modelo">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/modeloInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="VIN (Número de Serie)">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/vinInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Placa">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/placaInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/propioSwitch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="¿Es vehículo propio?" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Tipo de Vehículo"/>
         <Spinner
-            android:id="@+id/tipoVehiculoSpinner"
+            android:id="@+id/spinnerTipoVehiculo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_input"
+            android:padding="8dp" />
 
+        <!-- SERVICIO REQUERIDO -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Servicio Requerido"/>
-        <Spinner
-            android:id="@+id/servicioSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"/>
+            android:text="Servicio requerido"
+            android:textSize="16sp"
+            android:textColor="@color/azul_oscuro"
+            android:layout_marginTop="20dp" />
 
+        <Spinner
+            android:id="@+id/spinnerServicio"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/rounded_input"
+            android:padding="8dp" />
+
+        <!-- BOTÓN GUARDAR -->
         <Button
-            android:id="@+id/btnGuardarVehiculo"
+            android:id="@+id/btnGuardar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Guardar Vehículo" />
+            android:layout_height="50dp"
+            android:text="Guardar vehículo"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/azul_medio"
+            android:textColor="@color/blanco" />
 
     </LinearLayout>
+
 </ScrollView>

@@ -1,33 +1,81 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="24dp"
-    android:gravity="center"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/gris_fondo">
 
-    <EditText
-        android:id="@+id/emailInput"
-        android:hint="Correo"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp">
 
-    <EditText
-        android:id="@+id/passwordInput"
-        android:hint="Contraseña"
-        android:inputType="textPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ASISTENTE LEGAL AUTOMOTRIZ"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/azul_oscuro"
+            android:layout_marginBottom="20dp" />
 
-    <Button
-        android:id="@+id/loginBtn"
-        android:text="Iniciar sesión"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/editEmail"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Correo electrónico"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
 
-    <Button
-        android:id="@+id/goToRegisterBtn"
-        android:text="Registrarse"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <EditText
+            android:id="@+id/editPassword"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_input"
+            android:padding="12dp" />
 
-</LinearLayout>
+        <!-- BOTÓN OLVIDÓ CONTRASEÑA -->
+        <TextView
+            android:id="@+id/btnForgot"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Olvidaste tu contraseña?"
+            android:textColor="@color/azul_medio"
+            android:layout_marginTop="15dp" />
+
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Iniciar sesión"
+            android:layout_marginTop="25dp"
+            android:backgroundTint="@color/azul_medio"
+            android:textColor="@color/blanco" />
+
+        <Button
+            android:id="@+id/btnGoRegister"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Crear cuenta"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/ambar"
+            android:textColor="@color/azul_oscuro" />
+
+
+        <!-- BOTÓN GOOGLE -->
+        <Button
+            android:id="@+id/btnGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Iniciar con Google"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="@color/rojo_google"
+            android:textColor="@color/blanco" />
+
+    </LinearLayout>
+
+</ScrollView>
