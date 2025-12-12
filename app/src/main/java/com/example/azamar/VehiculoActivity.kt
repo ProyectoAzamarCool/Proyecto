@@ -4,13 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.google.android.material.textfield.TextInputEditText
+import com.example.azamar.databinding.ActivityVehiculoBinding
 import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.launch
 import retrofit2.Response
@@ -62,37 +59,22 @@ class VehiculoActivity : AppCompatActivity() {
 
     private lateinit var apiService: VehiculoApiService
     private lateinit var token: String
-
-    private lateinit var modeloInput: TextInputEditText
-    private lateinit var vinInput: TextInputEditText
-    private lateinit var placaInput: TextInputEditText
-    private lateinit var propioSwitch: SwitchMaterial
-    private lateinit var tipoVehiculoSpinner: Spinner
-    private lateinit var servicioSpinner: Spinner
-    private lateinit var btnGuardarVehiculo: Button
+    private lateinit var binding: ActivityVehiculoBinding
 
     private var tiposVehiculoList: List<TipoVehiculo> = emptyList()
     private var serviciosList: List<Servicio> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_vehiculo)
-
-        // Inicializar vistas
-        modeloInput = findViewById(R.id.modeloInput)
-        vinInput = findViewById(R.id.vinInput)
-        placaInput = findViewById(R.id.placaInput)
-        propioSwitch = findViewById(R.id.propioSwitch)
-        tipoVehiculoSpinner = findViewById(R.id.tipoVehiculoSpinner)
-        servicioSpinner = findViewById(R.id.servicioSpinner)
-        btnGuardarVehiculo = findViewById(R.id.btnGuardarVehiculo)
+        binding = ActivityVehiculoBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Inicializar API y Token
         token = "Bearer ${getStoredToken()}"
         apiService = RetrofitClient.instance.create(VehiculoApiService::class.java)
 
         // Listeners
-        btnGuardarVehiculo.setOnClickListener {
+        binding.btnGuardar.setOnClickListener {
             guardarVehiculo()
         }
 
@@ -109,7 +91,7 @@ class VehiculoActivity : AppCompatActivity() {
                     tiposVehiculoList = tiposResponse.body() ?: emptyList()
                     val tipoAdapter = ArrayAdapter(this@VehiculoActivity, android.R.layout.simple_spinner_item, tiposVehiculoList)
                     tipoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    tipoVehiculoSpinner.adapter = tipoAdapter
+                    binding.spinnerTipoVehiculo.adapter = tipoAdapter
                 } else {
                     showError("Error al cargar tipos de vehículo")
                 }
@@ -120,7 +102,7 @@ class VehiculoActivity : AppCompatActivity() {
                     serviciosList = serviciosResponse.body() ?: emptyList()
                     val servicioAdapter = ArrayAdapter(this@VehiculoActivity, android.R.layout.simple_spinner_item, serviciosList)
                     servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    servicioSpinner.adapter = servicioAdapter
+                    binding.spinnerServicio.adapter = servicioAdapter
                 } else {
                     showError("Error al cargar servicios")
                 }
@@ -134,8 +116,8 @@ class VehiculoActivity : AppCompatActivity() {
 
     private fun guardarVehiculo() {
         // Obtener IDs de los spinners
-        val selectedTipo = tipoVehiculoSpinner.selectedItem as? TipoVehiculo
-        val selectedServicio = servicioSpinner.selectedItem as? Servicio
+        val selectedTipo = binding.spinnerTipoVehiculo.selectedItem as? TipoVehiculo
+        val selectedServicio = binding.spinnerServicio.selectedItem as? Servicio
 
         if (selectedTipo == null || selectedServicio == null) {
             showError("Selecciona un tipo de vehículo y un servicio")
@@ -143,10 +125,10 @@ class VehiculoActivity : AppCompatActivity() {
         }
 
         val vehiculo = Vehiculo(
-            modelo = modeloInput.text.toString(),
-            vin = vinInput.text.toString(),
-            placa = placaInput.text.toString(),
-            propio = propioSwitch.isChecked,
+            modelo = binding.editModelo.text.toString(),
+            vin = binding.editVin.text.toString(),
+            placa = binding.editPlaca.text.toString(),
+            propio = binding.switchVehiculoPropio.isChecked,
             fkTipoDeVehiculo = selectedTipo.id,
             fkServicio = selectedServicio.id
         )

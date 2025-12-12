@@ -2,7 +2,10 @@ package com.example.azamar
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.ai.client.generativeai.GenerativeModel
@@ -20,25 +23,35 @@ class HomeActivity : AppCompatActivity() {
         val welcome = findViewById<TextView>(R.id.welcomeText)
         welcome.text = "Hola ${user?.email}, bienvenido."
 
-        val geminiButton = findViewById<Button>(R.id.gemini_button)
+        val promptInput = findViewById<EditText>(R.id.prompt_input)
+        val sendButton = findViewById<Button>(R.id.send_button)
+        val voiceButton = findViewById<ImageButton>(R.id.voice_button)
         val geminiResponseText = findViewById<TextView>(R.id.gemini_response_text)
 
-        geminiButton.setOnClickListener {
-            lifecycleScope.launch {
-                try {
-                    val generativeModel = GenerativeModel(
-                        modelName = "gemini-pro",
-                        apiKey = BuildConfig.apiKey
-                    )
+        sendButton.setOnClickListener {
+            val prompt = promptInput.text.toString()
+            if (prompt.isNotBlank()) {
+                lifecycleScope.launch {
+                    try {
+                        val generativeModel = GenerativeModel(
+                            modelName = "gemini-2.0-flash-lite",
+                            apiKey = BuildConfig.apiKey
+                        )
 
-                    val prompt = "Dame un saludo creativo para un usuario de mi app."
-                    val response = generativeModel.generateContent(prompt)
+                        val response = generativeModel.generateContent(prompt)
 
-                    geminiResponseText.text = response.text
-                } catch (e: Exception) {
-                    geminiResponseText.text = "Error: ${e.message}"
+                        geminiResponseText.text = response.text
+                    } catch (e: Exception) {
+                        geminiResponseText.text = "Error: ${e.message}"
+                    }
                 }
+            } else {
+                Toast.makeText(this, "Por favor ingresa un texto", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        voiceButton.setOnClickListener {
+            Toast.makeText(this, "Interacción por voz próximamente", Toast.LENGTH_SHORT).show()
         }
     }
 }
