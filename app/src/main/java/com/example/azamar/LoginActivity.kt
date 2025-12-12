@@ -45,36 +45,6 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-            auth.signInWithEmailAndPassword(emailText, passwordText)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        // Login exitoso, obtener usuario y token
-                        val user = auth.currentUser
-                        user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
-                            if (tokenTask.isSuccessful) {
-                                val idToken = tokenTask.result?.token
-                                if (idToken != null) {
-                                    // Guardar el token
-                                    val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
-                                    prefs.edit().putString("auth_token", idToken).apply()
-
-                                    // Ir a ProfileActivity
-                                    Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-                                    startActivity(Intent(this, ProfileActivity::class.java))
-                                    finish()
-                                } else {
-                                    Toast.makeText(this, "Error: No se pudo obtener el token.", Toast.LENGTH_LONG).show()
-                                }
-                            } else {
-                                Toast.makeText(this, "Error al obtener token: ${tokenTask.exception?.message}", Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    } else {
-                        Toast.makeText(this, "Error de inicio de sesión: ${task.exception?.message}", Toast.LENGTH_LONG).show()
-                    }
-                }
-        }
-
         // IR A REGISTRO
         binding.btnGoRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -88,12 +58,32 @@ class LoginActivity : AppCompatActivity() {
 
     private fun loginUser(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password)
-            .addOnSuccessListener {
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // Login exitoso, obtener usuario y token
+                    val user = auth.currentUser
+                    user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
+                        if (tokenTask.isSuccessful) {
+                            val idToken = tokenTask.result?.token
+                            if (idToken != null) {
+                                // Guardar el token
+                                val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+                                prefs.edit().putString("auth_token", idToken).apply()
+
+                                // Ir a ProfileActivity
+                                Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, ProfileActivity::class.java))
+                                finish()
+                            } else {
+                                Toast.makeText(this, "Error: No se pudo obtener el token.", Toast.LENGTH_LONG).show()
+                            }
+                        } else {
+                            Toast.makeText(this, "Error al obtener token: ${tokenTask.exception?.message}", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Error de inicio de sesión: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                }
             }
     }
 
