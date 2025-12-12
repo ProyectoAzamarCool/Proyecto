@@ -68,7 +68,7 @@
 
         <!-- BOTÓN GOOGLE -->
         <Button
-            android:id="@+id/btnGoogle"
+            android:id="@+id/btnGoogleLogin"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:text="Iniciar con Google"
