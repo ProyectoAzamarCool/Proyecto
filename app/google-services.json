@@ -1,7 +1,6 @@
 {
   "project_info": {
     "project_number": "203017633210",
-    "firebase_url": "https://prueba1-488ad-default-rtdb.firebaseio.com",
     "project_id": "prueba1-488ad",
     "storage_bucket": "prueba1-488ad.firebasestorage.app"
   },
@@ -13,7 +12,12 @@
           "package_name": "com.example.azamar"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "203017633210-si3k9phhpl1cn2rtee47521h72d17bof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBvukwJhumy9Jt73NtKlvvYZJepcitwus4"
@@ -21,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "203017633210-si3k9phhpl1cn2rtee47521h72d17bof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
