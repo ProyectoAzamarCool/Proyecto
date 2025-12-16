@@ -1,41 +1,33 @@
 {
   "project_info": {
-    "project_number": "716583851902",
-    "project_id": "login-cas",
-    "storage_bucket": "login-cas.firebasestorage.app"
+    "project_number": "203017633210",
+    "project_id": "prueba1-488ad",
+    "storage_bucket": "prueba1-488ad.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:716583851902:android:d816f0a67a1e8be098452f",
+        "mobilesdk_app_id": "1:203017633210:android:649cbd99590df487af3183",
         "android_client_info": {
           "package_name": "com.example.azamar"
         }
       },
       "oauth_client": [
         {
-          "client_id": "716583851902-lhfi24ug3ipqo2g8dli0v2t9ojcd2qfp.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.azamar",
-            "certificate_hash": "273de87c7de9326235d86f7ecb05522f57b066a2"
-          }
-        },
-        {
-          "client_id": "716583851902-ubslpfegiuuvj8kij90e0ts4oi3s7b1f.apps.googleusercontent.com",
+          "client_id": "203017633210-si3k9phhpl1cn2rtee47521h72d17bof.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBBUJiV5QqDyHHkyyCLlpSoU_sj-nRm3kw"
+          "current_key": "AIzaSyBvukwJhumy9Jt73NtKlvvYZJepcitwus4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "716583851902-ubslpfegiuuvj8kij90e0ts4oi3s7b1f.apps.googleusercontent.com",
+              "client_id": "203017633210-si3k9phhpl1cn2rtee47521h72d17bof.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
