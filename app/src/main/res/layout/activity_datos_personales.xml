@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!-- INICIO DE LA CORRECCIÓN -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,7 +18,6 @@
             android:textStyle="bold"
             android:textColor="@color/azul_oscuro"
             android:layout_marginBottom="20dp" />
-        <!-- FIN DE LA CORRECCIÓN -->
 
         <EditText
             android:id="@+id/editNombre"
@@ -27,6 +25,8 @@
             android:layout_height="48dp"
             android:hint="Nombre"
             android:background="@drawable/rounded_input"
+            android:inputType="textPersonName"
+            android:maxLines="1"
             android:padding="12dp" />
 
         <EditText
@@ -36,6 +36,8 @@
             android:hint="Apellido paterno"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
+            android:inputType="textPersonName"
+            android:maxLines="1"
             android:padding="12dp" />
 
         <EditText
@@ -45,6 +47,8 @@
             android:hint="Apellido materno"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
+            android:inputType="textPersonName"
+            android:maxLines="1"
             android:padding="12dp" />
 
         <EditText
@@ -54,6 +58,7 @@
             android:hint="Fecha de nacimiento (YYYY-MM-DD)"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
+            android:focusable="false"
             android:padding="12dp" />
 
         <EditText
@@ -63,6 +68,8 @@
             android:hint="Teléfono"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
+            android:inputType="phone"
+            android:maxLines="1"
             android:padding="12dp" />
 
         <Button

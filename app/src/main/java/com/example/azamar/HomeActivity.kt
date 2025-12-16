@@ -1,5 +1,6 @@
 package com.example.azamar
 
+import android.content.Context
 import android.Manifest
 import android.app.Activity
 import android.content.Intent

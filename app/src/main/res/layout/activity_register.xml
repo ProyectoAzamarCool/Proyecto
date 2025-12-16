@@ -25,8 +25,9 @@
             android:layout_height="48dp"
             android:hint="Correo electrónico"
             android:background="@drawable/rounded_input"
-            android:padding="12dp"
-            android:maxLines="1"/>
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
+            android:padding="12dp" />
 
         <EditText
             android:id="@+id/editPassword"
@@ -36,8 +37,16 @@
             android:inputType="textPassword"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
-            android:padding="12dp"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:padding="12dp" />
+
+        <CheckBox
+            android:id="@+id/checkTerms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/terms_and_conditions"
+            android:textColor="@color/azul_oscuro" />
 
         <Button
             android:id="@+id/btnRegister"

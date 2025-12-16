@@ -25,6 +25,8 @@
             android:layout_height="48dp"
             android:hint="Correo electrónico"
             android:background="@drawable/rounded_input"
+            android:inputType="textEmailAddress"
+            android:maxLines="1"
             android:padding="12dp" />
 
         <EditText
@@ -35,6 +37,7 @@
             android:inputType="textPassword"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
+            android:maxLines="1"
             android:padding="12dp" />
 
         <!-- BOTÓN OLVIDÓ CONTRASEÑA -->
@@ -45,7 +48,6 @@
             android:text="¿Olvidaste tu contraseña?"
             android:textColor="@color/azul_medio"
             android:layout_marginTop="15dp" />
-
 
         <Button
             android:id="@+id/btnLogin"
