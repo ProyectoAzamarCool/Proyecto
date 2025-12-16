@@ -20,12 +20,14 @@
 
     <Button
         android:id="@+id/send_button"
-        android:layout_width="wrap_content"
+        android:layout_width="113dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/ambar"
-        android:text="Enviar" />
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="-8dp"
+        android:text="Enviar"
+        android:textColor="@color/ambar" />
 
     <ImageButton
         android:id="@+id/voice_button"
@@ -49,17 +51,25 @@
         android:textColorHint="@color/ambar"
         android:textColor="@color/ambar"/>
 
-    <TextView
-        android:id="@+id/gemini_response_text"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/welcomeText"
         android:layout_above="@id/prompt_input"
+        android:layout_below="@id/welcomeText"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="16dp"
-        android:textSize="16sp"
-        android:background="@color/black"
-        android:textColor="@color/ambar"
-        tools:text="Respuesta de Gemini aquí." />
+        android:background="@color/black">
+
+        <TextView
+            android:id="@+id/gemini_response_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:padding="8dp"
+            android:textColor="@color/ambar"
+            android:textSize="16sp"
+            tools:text="Respuesta de Gemini aquí." />
+
+    </ScrollView>
 
 </RelativeLayout>
