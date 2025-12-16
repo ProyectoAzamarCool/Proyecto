@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Azamar</string>
     <string name="default_web_client_id">716583851902-ubslpfegiuuvj8kij90e0ts4oi3s7b1f.apps.googleusercontent.com</string>
-
+    <string name="terms_and_conditions">Acepto los términos y condiciones</string>
 </resources>

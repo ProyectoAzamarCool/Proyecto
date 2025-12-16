@@ -15,4 +15,15 @@
         android:textStyle="bold"
         android:layout_centerInParent="true" />
 
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/welcomeText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Cerrar sesión"
+        android:backgroundTint="@color/ambar"
+        android:textColor="@color/azul_oscuro"/>
+
 </RelativeLayout>
