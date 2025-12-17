@@ -94,8 +94,16 @@ class VehiculoActivity : AppCompatActivity() {
         token = "Bearer ${getStoredToken()}"
         apiService = RetrofitClient.instance.create(VehiculoApiService::class.java)
 
-        // Antes de mostrar nada, comprobar si el usuario ya tiene vehículos.
-        checkExistingVehicles()
+        val forceShowForm = intent.getBooleanExtra("FORCE_SHOW_FORM", false)
+
+        if (forceShowForm) {
+            // Si se nos obliga a mostrar el formulario (viniendo de "Añadir vehículo"), saltamos la comprobación.
+            Log.d("VehiculoActivity", "Forzando la muestra del formulario de creación.")
+            setupForm()
+        } else {
+            // Comportamiento normal: comprobar si el usuario ya tiene vehículos.
+            checkExistingVehicles()
+        }
     }
 
     private fun checkExistingVehicles() {
@@ -110,7 +118,7 @@ class VehiculoActivity : AppCompatActivity() {
                     startActivity(Intent(this@VehiculoActivity, HomeActivity::class.java))
                     finish() // Cierra esta actividad para que el usuario no pueda volver.
                 } else {
-                    // Si la lista está vacía, o hubo un error conocido, mostrar el formulario para añadir uno.
+                    // Si la lista está vacía, mostrar el formulario para añadir uno.
                     Log.d("VehiculoActivity", "No se encontraron vehículos. Mostrando formulario de creación.")
                     setupForm()
                 }

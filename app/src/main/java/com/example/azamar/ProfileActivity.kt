@@ -117,7 +117,9 @@ class ProfileActivity : AppCompatActivity() {
         btnAddVehiculo = findViewById(R.id.btnAddVehiculo)
 
         btnAddVehiculo.setOnClickListener { 
-            startActivity(Intent(this, VehiculoActivity::class.java))
+            val intent = Intent(this, VehiculoActivity::class.java)
+            intent.putExtra("FORCE_SHOW_FORM", true) // <-- LA SEÑAL
+            startActivity(intent)
         }
         btnEditar.setOnClickListener { showEditForm() }
     }
