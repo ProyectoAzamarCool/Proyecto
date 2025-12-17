@@ -3,41 +3,49 @@ package com.example.azamar
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.annotations.SerializedName
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
+import retrofit2.http.Path
 
-// --- Data Class Unificada ---
+// --- Data Classes ---
 data class Usuario(
-    @SerializedName("id_usuario")
-    val idUsuario: Int? = null,
-    @SerializedName("uid_usuario")
-    val uidUsuario: String? = null,
     val nombre: String,
-    @SerializedName("apellido_paterno")
-    val apellidoPaterno: String,
-    @SerializedName("apellido_materno")
-    val apellidoMaterno: String,
-    @SerializedName("fecha_nacimiento")
-    val fechaNacimiento: String, // Formato ISO 8601 "YYYY-MM-DD"
-    val telefono: String
+    @SerializedName("apellido_paterno") val apellidoPaterno: String,
+    @SerializedName("apellido_materno") val apellidoMaterno: String,
+    @SerializedName("fecha_nacimiento") val fechaNacimiento: String,
+    val telefono: String,
+    @SerializedName("id_usuario") val idUsuario: Int? = null,
+    @SerializedName("uid_usuario") val uidUsuario: String? = null
 )
 
-// --- API Service Completo (CRUD) ---
+data class VehiculoPerfil(
+    @SerializedName("id_vehiculo") val id: Int,
+    val modelo: String,
+    val placa: String,
+    @SerializedName("tipo_nombre") val tipo: String
+)
+
+
+// --- API Service (Ahora con vehículos) ---
 interface UsuarioApiService {
     @GET("info-usuario")
     suspend fun getPerfil(@Header("Authorization") token: String): Response<Usuario>
@@ -47,96 +55,100 @@ interface UsuarioApiService {
 
     @PUT("info-usuario")
     suspend fun updatePerfil(@Header("Authorization") token: String, @Body usuario: Usuario): Response<Usuario>
+
+    @GET("info-usuario/vehiculo")
+    suspend fun getVehiculos(@Header("Authorization") token: String): Response<List<VehiculoPerfil>>
+
+    @DELETE("info-usuario/vehiculo/{id}")
+    suspend fun deleteVehiculo(@Header("Authorization") token: String, @Path("id") vehiculoId: Int): Response<Unit>
 }
 
-// --- Activity Fusionada ---
+// --- Activity ---
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var apiService: UsuarioApiService
     private var currentUser: Usuario? = null
     private lateinit var token: String
 
-    // Vistas
+    // Vistas de UI
     private lateinit var profileViewContainer: LinearLayout
     private lateinit var profileFormContainer: LinearLayout
+    private lateinit var vehiclesContainer: LinearLayout
     private lateinit var nombreText: TextView
     private lateinit var fechaText: TextView
     private lateinit var telefonoText: TextView
+    private lateinit var btnEditar: Button
+    private lateinit var btnAddVehiculo: Button
+    // Vistas del formulario de perfil (se inicializan más tarde)
     private lateinit var nombreInput: TextInputEditText
     private lateinit var apellidoPatInput: TextInputEditText
     private lateinit var apellidoMatInput: TextInputEditText
     private lateinit var fechaInput: TextInputEditText
     private lateinit var telefonoInput: TextInputEditText
     private lateinit var btnGuardar: Button
-    private lateinit var btnEditar: Button
     private lateinit var formTitle: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
 
-        // Inicializar vistas
-        profileViewContainer = findViewById(R.id.profileViewContainer)
-        profileFormContainer = findViewById(R.id.profileFormContainer)
-        nombreText = findViewById(R.id.nombreText)
-        fechaText = findViewById(R.id.fechaText)
-        telefonoText = findViewById(R.id.telefonoText)
-        nombreInput = findViewById(R.id.nombreInput)
-        apellidoPatInput = findViewById(R.id.apellidoPatInput)
-        apellidoMatInput = findViewById(R.id.apellidoMatInput)
-        fechaInput = findViewById(R.id.fechaInput)
-        telefonoInput = findViewById(R.id.telefonoInput)
-        btnGuardar = findViewById(R.id.btnGuardar)
-        btnEditar = findViewById(R.id.btnEditar)
-        formTitle = findViewById(R.id.formTitle)
-
+        // Inicialización
+        initializeViews()
         token = "Bearer ${getStoredToken()}"
         apiService = RetrofitClient.instance.create(UsuarioApiService::class.java)
 
-        // Comprobar la "señal" del Intent
+        // Lógica principal
         val shouldShowProfile = intent.getBooleanExtra("SHOW_PROFILE_VIEW", false)
-
         if (shouldShowProfile) {
-            // Si venimos de Home, mostramos el perfil
-            loadAndShowProfile()
+            loadAndShowProfileAndVehicles()
         } else {
-            // Si venimos del login/registro, aplicamos la lógica de redirección
             loadProfileAndRedirect()
         }
     }
 
-    // Lógica para el flujo de login: redirige si el perfil existe
-    private fun loadProfileAndRedirect() {
-        lifecycleScope.launch {
-            try {
-                val response = apiService.getPerfil(token)
-                if (response.isSuccessful) {
-                    goToHomeActivity()
-                } else if (response.code() == 404) {
-                    showCreateForm()
-                } else {
-                    handleApiError(response)
-                }
-            } catch (e: Exception) {
-                handleNetworkError(e, "cargar el perfil")
-            }
+    private fun initializeViews() {
+        profileViewContainer = findViewById(R.id.profileViewContainer)
+        profileFormContainer = findViewById(R.id.profileFormContainer)
+        vehiclesContainer = findViewById(R.id.vehiclesContainer)
+        nombreText = findViewById(R.id.nombreText)
+        fechaText = findViewById(R.id.fechaText)
+        telefonoText = findViewById(R.id.telefonoText)
+        btnEditar = findViewById(R.id.btnEditar)
+        btnAddVehiculo = findViewById(R.id.btnAddVehiculo)
+
+        btnAddVehiculo.setOnClickListener { 
+            startActivity(Intent(this, VehiculoActivity::class.java))
         }
+        btnEditar.setOnClickListener { showEditForm() }
     }
 
-    // Lógica para "Ver Perfil": carga y muestra los datos
-    private fun loadAndShowProfile() {
+    // Carga perfil y vehículos para mostrarlos
+    private fun loadAndShowProfileAndVehicles() {
         lifecycleScope.launch {
             try {
-                val response = apiService.getPerfil(token)
-                if (response.isSuccessful) {
-                    currentUser = response.body()
-                    displayProfileData() // Muestra los datos en la UI
+                val profileResponseDeferred = async { apiService.getPerfil(token) }
+                val vehiclesResponseDeferred = async { apiService.getVehiculos(token) }
+
+                val profileResponse = profileResponseDeferred.await()
+                val vehiclesResponse = vehiclesResponseDeferred.await()
+
+                if (profileResponse.isSuccessful) {
+                    currentUser = profileResponse.body()
+                    displayProfileData()
                 } else {
-                    // Si hay un error (incluso 404), lo mostramos, ya que el usuario esperaba ver un perfil.
-                    handleApiError(response)
+                    handleApiError(profileResponse, "perfil")
+                    return@launch
                 }
+
+                if (vehiclesResponse.isSuccessful) {
+                    val vehicles = vehiclesResponse.body() ?: emptyList()
+                    displayVehicles(vehicles)
+                } else {
+                    handleApiError(vehiclesResponse, "vehículos")
+                }
+
             } catch (e: Exception) {
-                handleNetworkError(e, "cargar el perfil")
+                handleNetworkError(e, "cargar datos")
             }
         }
     }
@@ -146,15 +158,104 @@ class ProfileActivity : AppCompatActivity() {
             nombreText.text = "${it.nombre} ${it.apellidoPaterno} ${it.apellidoMaterno}"
             fechaText.text = "Nacimiento: ${it.fechaNacimiento.substringBefore('T')}"
             telefonoText.text = "Teléfono: ${it.telefono}"
-
-            profileFormContainer.visibility = View.GONE
             profileViewContainer.visibility = View.VISIBLE
-
-            btnEditar.setOnClickListener { showEditForm() }
         }
     }
 
+    private fun displayVehicles(vehicles: List<VehiculoPerfil>) {
+        vehiclesContainer.removeAllViews()
+        if (vehicles.isEmpty()) {
+            val noVehiclesText = TextView(this).apply {
+                text = "No tienes vehículos registrados."
+                gravity = Gravity.CENTER
+            }
+            vehiclesContainer.addView(noVehiclesText)
+        } else {
+            vehicles.forEach { vehicle ->
+                val vehicleView = createVehicleView(vehicle)
+                vehiclesContainer.addView(vehicleView)
+            }
+        }
+    }
+
+    private fun createVehicleView(vehicle: VehiculoPerfil): View {
+        val linearLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(0, 8, 0, 8)
+        }
+
+        val infoText = TextView(this).apply {
+            text = "${vehicle.modelo} - ${vehicle.placa} (${vehicle.tipo})"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
+        }
+
+        val deleteButton = Button(this).apply {
+            text = "Eliminar"
+            setOnClickListener { showDeleteConfirmationDialog(vehicle) }
+        }
+
+        linearLayout.addView(infoText)
+        linearLayout.addView(deleteButton)
+        return linearLayout
+    }
+    
+    private fun showDeleteConfirmationDialog(vehicle: VehiculoPerfil) {
+        AlertDialog.Builder(this)
+            .setTitle("Confirmar Eliminación")
+            .setMessage("¿Estás seguro de que quieres eliminar el vehículo ${vehicle.modelo} con placa ${vehicle.placa}?")
+            .setPositiveButton("Eliminar") { _, _ -> deleteVehicle(vehicle.id) }
+            .setNegativeButton("Cancelar", null)
+            .show()
+    }
+
+    private fun deleteVehicle(vehicleId: Int) {
+        lifecycleScope.launch {
+            try {
+                val response = apiService.deleteVehiculo(token, vehicleId)
+                if (response.isSuccessful) {
+                    Toast.makeText(this@ProfileActivity, "Vehículo eliminado", Toast.LENGTH_SHORT).show()
+                    loadAndShowProfileAndVehicles()
+                } else {
+                    handleApiError(response, "eliminar el vehículo")
+                }
+            } catch (e: Exception) {
+                handleNetworkError(e, "eliminar el vehículo")
+            }
+        }
+    }
+
+    // --- Código anterior (redirección, creación, etc.) ---
+    private fun loadProfileAndRedirect() {
+        lifecycleScope.launch {
+            try {
+                val response = apiService.getPerfil(token)
+                if (response.isSuccessful) {
+                    goToHomeActivity()
+                } else if (response.code() == 404) {
+                    showCreateForm()
+                } else {
+                    handleApiError(response, "perfil")
+                }
+            } catch (e: Exception) {
+                handleNetworkError(e, "cargar el perfil")
+            }
+        }
+    }
+
+    private fun initializeFormViews() {
+        nombreInput = findViewById(R.id.nombreInput)
+        apellidoPatInput = findViewById(R.id.apellidoPatInput)
+        apellidoMatInput = findViewById(R.id.apellidoMatInput)
+        fechaInput = findViewById(R.id.fechaInput)
+        telefonoInput = findViewById(R.id.telefonoInput)
+        btnGuardar = findViewById(R.id.btnGuardar)
+        formTitle = findViewById(R.id.formTitle)
+    }
+
     private fun showCreateForm() {
+        initializeFormViews()
         formTitle.text = "Crear Perfil"
         clearForm()
         btnGuardar.setOnClickListener { saveProfile() }
@@ -163,6 +264,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun showEditForm() {
+        initializeFormViews()
         currentUser?.let {
             formTitle.text = "Editar Perfil"
             nombreInput.setText(it.nombre)
@@ -178,11 +280,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun saveProfile() {
-        val firebaseUser = FirebaseAuth.getInstance().currentUser
-        if (firebaseUser == null) {
-            showError("Error: No hay usuario autenticado.")
-            return
-        }
+        val firebaseUser = FirebaseAuth.getInstance().currentUser ?: return
 
         val nombre = nombreInput.text.toString().trim()
         val apellidoP = apellidoPatInput.text.toString().trim()
@@ -195,30 +293,17 @@ class ProfileActivity : AppCompatActivity() {
             return
         }
 
-        val usuario = Usuario(
-            idUsuario = currentUser?.idUsuario,
-            uidUsuario = firebaseUser.uid,
-            nombre = nombre,
-            apellidoPaterno = apellidoP,
-            apellidoMaterno = apellidoM,
-            fechaNacimiento = fecha,
-            telefono = telefono
-        )
+        val usuario = Usuario(nombre, apellidoP, apellidoM, fecha, telefono, currentUser?.idUsuario, firebaseUser.uid)
 
         lifecycleScope.launch {
             try {
-                val response = if (currentUser == null) {
-                    apiService.createPerfil(token, usuario)
-                } else {
-                    apiService.updatePerfil(token, usuario)
-                }
-
+                val response = if (currentUser == null) apiService.createPerfil(token, usuario) else apiService.updatePerfil(token, usuario)
                 if (response.isSuccessful) {
                     val message = if (currentUser == null) "Perfil Creado" else "Perfil Actualizado"
                     Toast.makeText(this@ProfileActivity, message, Toast.LENGTH_SHORT).show()
                     goToHomeActivity()
                 } else {
-                    handleApiError(response)
+                    handleApiError(response, "guardar el perfil")
                 }
             } catch (e: Exception) {
                 handleNetworkError(e, "guardar el perfil")
@@ -228,10 +313,10 @@ class ProfileActivity : AppCompatActivity() {
     
     // --- Funciones de Ayuda ---
 
-    private fun handleApiError(response: Response<*>) {
+    private fun handleApiError(response: Response<*>, action: String) {
         val errorBody = response.errorBody()?.string() ?: "Sin detalles"
         val errorCode = response.code()
-        val errorMessage = "Error (Código: $errorCode): $errorBody"
+        val errorMessage = "Error al $action (Código: $errorCode): $errorBody"
         Log.e("ProfileActivity", errorMessage)
         showError(errorMessage)
     }
