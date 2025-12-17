@@ -6,7 +6,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 
@@ -24,8 +26,13 @@ class RegisterActivity : AppCompatActivity() {
         val password = findViewById<EditText>(R.id.editPassword)
         val btnRegister = findViewById<Button>(R.id.btnRegister)
         val checkTerms = findViewById<CheckBox>(R.id.checkTerms)
+        val textMoreInfo = findViewById<TextView>(R.id.textMoreInfo)
 
         val prefs = getSharedPreferences("AzamarPrefs", Context.MODE_PRIVATE)
+
+        textMoreInfo.setOnClickListener {
+            showTermsDialog()
+        }
 
         btnRegister.setOnClickListener {
 
@@ -49,5 +56,15 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun showTermsDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Términos y Condiciones")
+            .setMessage(R.string.full_terms_and_conditions)
+            .setPositiveButton("Cerrar") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }
