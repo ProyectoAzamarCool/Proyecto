@@ -1,7 +1,22 @@
 <resources>
     <string name="app_name">Azamar</string>
+    <string name="default_web_client_id">716583851902-ubslpfegiuuvj8kij90e0ts4oi3s7b1f.apps.googleusercontent.com</string>
     <string name="terms_and_conditions">Acepto los términos y condiciones</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="default_web_client_id">203017633210-si3k9phhpl1cn2rtee47521h72d17bof.apps.googleusercontent.com</string>
+    <string name="full_terms_and_conditions">
+        **Términos y Condiciones de Uso de Azamar**\n\n
+        **1. Aceptación de los Términos**\n
+        Al utilizar nuestra aplicación, usted acepta estar sujeto a estos términos y condiciones. Si no está de acuerdo con alguna parte de los términos, no podrá utilizar nuestros servicios.\n\n
+        **2. Descripción del Servicio**\n
+        Sin sorjuanas es un asistente legal automotriz que proporciona información y asistencia automatizada. No reemplaza el consejo de un profesional legal calificado. La información proporcionada por la aplicación es solo para fines informativos.\n\n
+        **3. Uso Aceptable**\n
+        Usted se compromete a no utilizar la aplicación para ningún propósito ilegal o no autorizado. Se prohíbe el uso de la aplicación para transmitir cualquier contenido que sea ilegal, acosador, difamatorio, abusivo, amenazante, dañino o de cualquier otra manera objetable.\n\n
+        **4. Cuentas de Usuario**\n
+        Para acceder a ciertas funciones de la aplicación, es posible que deba registrarse para obtener una cuenta. Usted es responsable de mantener la confidencialidad de la información de su cuenta y de todas las actividades que ocurran bajo su cuenta.\n\n
+        **5. Propiedad Intelectual**\n
+        Todo el contenido y los materiales disponibles en Sin sorjuanas, incluidos, entre otros, texto, gráficos, logotipos, iconos de botones, imágenes y compilaciones de datos, son propiedad de Sin sorjuanas o sus licenciantes y están protegidos por las leyes de derechos de autor.\n\n
+        **6. Limitación de Responsabilidad**\n
+        Azamar no será responsable de ningún daño directo, indirecto, incidental, especial, consecuente o ejemplar que resulte del uso o la imposibilidad de usar el servicio.\n\n
+        **7. Modificaciones a los Términos**\n
+        Nos reservamos el derecho de modificar estos términos en cualquier momento. Su uso continuado de la aplicación después de cualquier cambio constituirá su aceptación de los nuevos términos.
+    </string>
 </resources>
