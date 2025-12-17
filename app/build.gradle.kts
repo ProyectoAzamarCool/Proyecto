@@ -25,12 +25,17 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        // API KEY desde local.properties (proyecto base)
         val localProperties = Properties()
         val localPropertiesFile = rootProject.file("local.properties")
         if (localPropertiesFile.exists()) {
             localProperties.load(localPropertiesFile.inputStream())
         }
-        buildConfigField("String", "apiKey", "\"${localProperties.getProperty("apiKey")}\"")
+        buildConfigField(
+            "String",
+            "apiKey",
+            "\"${localProperties.getProperty("apiKey")}\""
+        )
     }
 
     buildTypes {
@@ -45,6 +50,8 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding = true
+        dataBinding = true
     }
 
     compileOptions {
@@ -55,25 +62,21 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-
-    // 🔥 AQUI SE AGREGA LO QUE NECESITAS
-    buildFeatures {
-        viewBinding = true
-        dataBinding = true
-    }
 }
 
 dependencies {
 
-    // 🔥 FIREBASE (COMPATIBLE)
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
-
-    // GOOGLE SIGN-IN
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 
-    // ANDROIDX
+    // ================= GOOGLE MAPS (AGREGADO) =================
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+
+    // ================= ANDROIDX =================
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation("com.google.android.material:material:1.12.0")
@@ -102,7 +105,7 @@ dependencies {
     // GEMINI
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
 
-    // TESTS
+    // ================= TESTS =================
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
