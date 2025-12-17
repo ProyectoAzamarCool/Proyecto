@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,49 +13,28 @@
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:textSize="18sp"
-        android:textColor="@color/white"
-        tools:text="Hola usuario, bienvenido." />
-
-    <Button
-        android:id="@+id/send_button"
-        android:layout_width="113dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="-8dp"
-        android:text="Enviar"
-        android:textColor="@color/ambar" />
+        android:textSize="25sp"
+        android:textColor="@color/white" />
 
     <ImageButton
-        android:id="@+id/voice_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/send_button"
-        android:src="@android:drawable/ic_btn_speak_now"
-        android:background="@color/black"
-        android:contentDescription="Entrada por voz" />
-
-    <EditText
-        android:id="@+id/prompt_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@id/voice_button"
-        android:background="@color/black"
-        android:hint="Escribe tu texto aquí"
-        android:textColorHint="@color/ambar"
-        android:textColor="@color/ambar"/>
+        android:id="@+id/settings_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/configuracion"
+        android:src="@android:drawable/ic_menu_manage"
+        app:tint="@color/white" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/prompt_input"
+        android:layout_above="@+id/prompt_input"
         android:layout_below="@id/welcomeText"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="16dp"
@@ -72,6 +52,35 @@
 
     </ScrollView>
 
+    <EditText
+        android:id="@+id/prompt_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/voice_button"
+        android:background="@color/black"
+        android:hint="@string/escribe_tu_texto_aqu"
+        android:textColorHint="@color/ambar"
+        android:textColor="@color/ambar"/>
+
+    <ImageButton
+        android:id="@+id/voice_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/send_button"
+        android:src="@android:drawable/ic_btn_speak_now"
+        android:background="@color/black"
+        android:contentDescription="@string/entrada_por_voz" />
+
+    <Button
+        android:id="@+id/send_button"
+        android:layout_width="113dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/enviar"
+        android:textColor="@color/ambar" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_abogados"
         android:layout_width="wrap_content"

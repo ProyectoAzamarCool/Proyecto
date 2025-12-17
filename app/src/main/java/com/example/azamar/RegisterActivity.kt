@@ -49,7 +49,7 @@ class RegisterActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     prefs.edit().putBoolean("termsAccepted", true).apply()
                     Toast.makeText(this, "Cuenta creada", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, DatosPersonalesActivity::class.java))
+                    startActivity(Intent(this, ProfileActivity::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, "Error al registrar", Toast.LENGTH_SHORT).show()

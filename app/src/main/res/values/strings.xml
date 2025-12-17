@@ -1,7 +1,14 @@
 <resources>
     <string name="app_name">Azamar</string>
-    <string name="default_web_client_id">716583851902-ubslpfegiuuvj8kij90e0ts4oi3s7b1f.apps.googleusercontent.com</string>
     <string name="terms_and_conditions">Acepto los términos y condiciones</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="default_web_client_id">203017633210-si3k9phhpl1cn2rtee47521h72d17bof.apps.googleusercontent.com</string>
+    <string name="configuracion">Configuración</string>
+    <string name="escribe_tu_texto_aqu">Escribe tu texto aquí</string>
+    <string name="entrada_por_voz">Entrada por voz</string>
+    <string name="enviar">Enviar</string>
+</resources>
     <string name="full_terms_and_conditions">
         **Términos y Condiciones de Uso de Azamar**\n\n
         **1. Aceptación de los Términos**\n
