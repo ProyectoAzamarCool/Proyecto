@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.widget.Button
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.firebase.auth.FirebaseAuth
@@ -30,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
 
     private val REQUEST_CODE_SPEECH_INPUT = 1
     private val RECORD_AUDIO_PERMISSION_REQUEST_CODE = 2
-    private val CACHE_FILE_NAME = "last_bot_response.txt"
+    private val CACHE_FILE_NAME = "conversation_history.txt"
 
     private lateinit var promptInput: EditText
     private lateinit var geminiResponseText: TextView
@@ -47,13 +49,14 @@ class HomeActivity : AppCompatActivity() {
         promptInput = findViewById(R.id.prompt_input)
         val sendButton = findViewById<Button>(R.id.send_button)
         val voiceButton = findViewById<ImageButton>(R.id.voice_button)
+        val downloadButton = findViewById<ImageButton>(R.id.download_button)
         geminiResponseText = findViewById(R.id.gemini_response_text)
 
-        // Leer respuesta guardada al iniciar
+        // Leer historial guardado al iniciar
         lifecycleScope.launch {
-            val cachedResponse = readResponseFromCache()
-            if (cachedResponse.isNotEmpty()) {
-                geminiResponseText.text = cachedResponse
+            val cachedHistory = readResponseFromCache()
+            if (cachedHistory.isNotEmpty()) {
+                geminiResponseText.text = cachedHistory
             }
         }
 
@@ -70,8 +73,13 @@ class HomeActivity : AppCompatActivity() {
                         val response = generativeModel.generateContent(prompt)
                         val responseText = response.text ?: ""
                         
-                        geminiResponseText.text = responseText
-                        saveResponseToCache(responseText)
+                        val newEntry = "\nTú: $prompt\nBot: $responseText\n-------------------"
+                        val currentText = geminiResponseText.text.toString()
+                        val updatedHistory = if (currentText.isEmpty()) newEntry else "$currentText\n$newEntry"
+                        
+                        geminiResponseText.text = updatedHistory
+                        saveResponseToCache(updatedHistory)
+                        promptInput.text.clear()
                         
                     } catch (e: Exception) {
                         geminiResponseText.text = "Error: ${e.message}"
@@ -88,6 +96,29 @@ class HomeActivity : AppCompatActivity() {
             } else {
                 startVoiceRecognition()
             }
+        }
+
+        downloadButton.setOnClickListener {
+            exportConversation()
+        }
+    }
+
+    private fun exportConversation() {
+        val file = File(cacheDir, CACHE_FILE_NAME)
+        if (file.exists()) {
+            val uri: Uri = FileProvider.getUriForFile(
+                this,
+                "${applicationContext.packageName}.fileprovider",
+                file
+            )
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "text/plain"
+            intent.putExtra(Intent.EXTRA_SUBJECT, "Historial de Conversación Azamar")
+            intent.putExtra(Intent.EXTRA_STREAM, uri)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            startActivity(Intent.createChooser(intent, "Descargar conversación"))
+        } else {
+            Toast.makeText(this, "No hay historial para descargar", Toast.LENGTH_SHORT).show()
         }
     }
 
