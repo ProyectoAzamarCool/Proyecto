@@ -26,8 +26,7 @@
         android:layout_marginEnd="85dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Descargar conversación"
-        android:src="@android:drawable/stat_sys_download"
-        android:tint="@color/white" />
+        android:src="@android:drawable/stat_sys_download" />
 
     <Button
         android:id="@+id/send_button"
@@ -83,9 +82,9 @@
 
     </ScrollView>
 
-        <Button
-            android:id="@+id/btnMapa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/baseline_map_24" />
+    <Button
+        android:id="@+id/btnMapa"
+        android:layout_width="34dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_map_24" />
 </RelativeLayout>
