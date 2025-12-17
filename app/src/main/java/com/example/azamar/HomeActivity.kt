@@ -16,7 +16,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.example.azamar.presentation.ui.ayudaexterna.AyudaExternaFragment
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import java.util.Locale
@@ -41,6 +43,13 @@ class HomeActivity : AppCompatActivity() {
         val sendButton = findViewById<Button>(R.id.send_button)
         val voiceButton = findViewById<ImageButton>(R.id.voice_button)
         val geminiResponseText = findViewById<TextView>(R.id.gemini_response_text)
+
+        val fabAbogados = findViewById<FloatingActionButton>(R.id.fab_abogados)
+        fabAbogados.setOnClickListener {
+            // Muestra el Bottom Sheet con la lista de abogados
+            val bottomSheet = AyudaExternaFragment()
+            bottomSheet.show(supportFragmentManager, "AyudaExternaTag")
+        }
 
         sendButton.setOnClickListener {
             val prompt = promptInput.text.toString()
