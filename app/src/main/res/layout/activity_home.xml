@@ -7,16 +7,27 @@
     tools:context=".HomeActivity"
     android:background="@color/azul_medio">
 
-
     <TextView
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="20dp"
         android:textSize="18sp"
         android:textColor="@color/white"
         tools:text="Hola usuario, bienvenido." />
+
+    <ImageButton
+        android:id="@+id/download_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="85dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Descargar conversación"
+        android:src="@android:drawable/stat_sys_download"
+        android:tint="@color/white" />
 
     <Button
         android:id="@+id/send_button"
