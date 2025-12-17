@@ -43,16 +43,10 @@ interface UsuarioApiService {
     suspend fun getPerfil(@Header("Authorization") token: String): Response<Usuario>
 
     @POST("info-usuario")
-    suspend fun createPerfil(
-        @Header("Authorization") token: String,
-        @Body usuario: Usuario
-    ): Response<Usuario>
+    suspend fun createPerfil(@Header("Authorization") token: String, @Body usuario: Usuario): Response<Usuario>
 
     @PUT("info-usuario")
-    suspend fun updatePerfil(
-        @Header("Authorization") token: String,
-        @Body usuario: Usuario
-    ): Response<Usuario>
+    suspend fun updatePerfil(@Header("Authorization") token: String, @Body usuario: Usuario): Response<Usuario>
 }
 
 // --- Activity Fusionada ---
@@ -96,18 +90,22 @@ class ProfileActivity : AppCompatActivity() {
         btnEditar = findViewById(R.id.btnEditar)
         formTitle = findViewById(R.id.formTitle)
 
-        // Inicializar API y Token
         token = "Bearer ${getStoredToken()}"
         apiService = RetrofitClient.instance.create(UsuarioApiService::class.java)
 
-        // Listeners
-        btnGuardar.setOnClickListener { saveProfile() }
-        btnEditar.setOnClickListener { showEditForm() }
+        // Comprobar la "señal" del Intent
+        val shouldShowProfile = intent.getBooleanExtra("SHOW_PROFILE_VIEW", false)
 
-        // Cargar datos del perfil y redirigir si es necesario
-        loadProfileAndRedirect()
+        if (shouldShowProfile) {
+            // Si venimos de Home, mostramos el perfil
+            loadAndShowProfile()
+        } else {
+            // Si venimos del login/registro, aplicamos la lógica de redirección
+            loadProfileAndRedirect()
+        }
     }
 
+    // Lógica para el flujo de login: redirige si el perfil existe
     private fun loadProfileAndRedirect() {
         lifecycleScope.launch {
             try {
@@ -117,16 +115,28 @@ class ProfileActivity : AppCompatActivity() {
                 } else if (response.code() == 404) {
                     showCreateForm()
                 } else {
-                    // --- MANEJO DE ERRORES MEJORADO ---
-                    val errorBody = response.errorBody()?.string() ?: "Sin detalles"
-                    val errorCode = response.code()
-                    val errorMessage = "Error al cargar perfil (Código: $errorCode, Causa: $errorBody)"
-                    Log.e("ProfileActivity", errorMessage)
-                    showError(errorMessage) // Muestra el error detallado en el Toast
+                    handleApiError(response)
                 }
             } catch (e: Exception) {
-                Log.e("ProfileActivity", "Error de red al cargar el perfil", e)
-                showError("Error de red: ${e.message}")
+                handleNetworkError(e, "cargar el perfil")
+            }
+        }
+    }
+
+    // Lógica para "Ver Perfil": carga y muestra los datos
+    private fun loadAndShowProfile() {
+        lifecycleScope.launch {
+            try {
+                val response = apiService.getPerfil(token)
+                if (response.isSuccessful) {
+                    currentUser = response.body()
+                    displayProfileData() // Muestra los datos en la UI
+                } else {
+                    // Si hay un error (incluso 404), lo mostramos, ya que el usuario esperaba ver un perfil.
+                    handleApiError(response)
+                }
+            } catch (e: Exception) {
+                handleNetworkError(e, "cargar el perfil")
             }
         }
     }
@@ -139,12 +149,15 @@ class ProfileActivity : AppCompatActivity() {
 
             profileFormContainer.visibility = View.GONE
             profileViewContainer.visibility = View.VISIBLE
+
+            btnEditar.setOnClickListener { showEditForm() }
         }
     }
 
     private fun showCreateForm() {
         formTitle.text = "Crear Perfil"
         clearForm()
+        btnGuardar.setOnClickListener { saveProfile() }
         profileViewContainer.visibility = View.GONE
         profileFormContainer.visibility = View.VISIBLE
     }
@@ -158,6 +171,7 @@ class ProfileActivity : AppCompatActivity() {
             fechaInput.setText(it.fechaNacimiento.substringBefore('T'))
             telefonoInput.setText(it.telefono)
 
+            btnGuardar.setOnClickListener { saveProfile() }
             profileViewContainer.visibility = View.GONE
             profileFormContainer.visibility = View.VISIBLE
         }
@@ -204,15 +218,27 @@ class ProfileActivity : AppCompatActivity() {
                     Toast.makeText(this@ProfileActivity, message, Toast.LENGTH_SHORT).show()
                     goToHomeActivity()
                 } else {
-                    val errorBody = response.errorBody()?.string() ?: "Error desconocido"
-                    Log.e("ProfileActivity", "Fallo al guardar. Código: ${response.code()}, Mensaje: $errorBody")
-                    showError("Fallo al guardar: $errorBody")
+                    handleApiError(response)
                 }
             } catch (e: Exception) {
-                Log.e("ProfileActivity", "Error de red al guardar el perfil", e)
-                showError("Error de red: ${e.message}")
+                handleNetworkError(e, "guardar el perfil")
             }
         }
+    }
+    
+    // --- Funciones de Ayuda ---
+
+    private fun handleApiError(response: Response<*>) {
+        val errorBody = response.errorBody()?.string() ?: "Sin detalles"
+        val errorCode = response.code()
+        val errorMessage = "Error (Código: $errorCode): $errorBody"
+        Log.e("ProfileActivity", errorMessage)
+        showError(errorMessage)
+    }
+
+    private fun handleNetworkError(e: Exception, action: String) {
+        Log.e("ProfileActivity", "Error de red al $action", e)
+        showError("Error de red: ${e.message}")
     }
 
     private fun clearForm() {
