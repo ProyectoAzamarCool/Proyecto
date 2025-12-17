@@ -81,5 +81,15 @@
         android:layout_alignParentBottom="true"
         android:text="@string/enviar"
         android:textColor="@color/ambar" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_abogados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/send_button"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_warning"
+        android:contentDescription="Ayuda Externa" />
 
 </RelativeLayout>
