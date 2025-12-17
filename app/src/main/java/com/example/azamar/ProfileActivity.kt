@@ -21,7 +21,7 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 
-// Data class
+// --- Data Class Unificada ---
 data class Usuario(
     @SerializedName("id_usuario")
     val idUsuario: Int? = null,
@@ -33,29 +33,29 @@ data class Usuario(
     @SerializedName("apellido_materno")
     val apellidoMaterno: String,
     @SerializedName("fecha_nacimiento")
-    val fechaNacimiento: String, // ISO 8601
+    val fechaNacimiento: String, // Formato ISO 8601 "YYYY-MM-DD"
     val telefono: String
 )
 
-// API Service
+// --- API Service Completo (CRUD) ---
 interface UsuarioApiService {
-    @GET("/info-usuario")
+    @GET("info-usuario")
     suspend fun getPerfil(@Header("Authorization") token: String): Response<Usuario>
 
-    @PUT("/info-usuario")
-    suspend fun updatePerfil(
+    @POST("info-usuario")
+    suspend fun createPerfil(
         @Header("Authorization") token: String,
         @Body usuario: Usuario
     ): Response<Usuario>
 
-    @POST("/info-usuario")
-    suspend fun createPerfil(
+    @PUT("info-usuario")
+    suspend fun updatePerfil(
         @Header("Authorization") token: String,
         @Body usuario: Usuario
     ): Response<Usuario>
 }
 
-// Activity
+// --- Activity Fusionada ---
 class ProfileActivity : AppCompatActivity() {
 
     private lateinit var apiService: UsuarioApiService
@@ -101,50 +101,58 @@ class ProfileActivity : AppCompatActivity() {
         apiService = RetrofitClient.instance.create(UsuarioApiService::class.java)
 
         // Listeners
-        btnGuardar.setOnClickListener {
-            saveProfile()
-        }
+        btnGuardar.setOnClickListener { saveProfile() }
+        btnEditar.setOnClickListener { showEditForm() }
 
-        btnEditar.setOnClickListener {
-            showFormularioEdicion()
-        }
-
-        // Cargar datos
-        loadProfile()
+        // Cargar datos del perfil y redirigir si es necesario
+        loadProfileAndRedirect()
     }
 
-    private fun loadProfile() {
+    private fun loadProfileAndRedirect() {
         lifecycleScope.launch {
             try {
                 val response = apiService.getPerfil(token)
                 if (response.isSuccessful) {
-                    currentUser = response.body()
-                    // Si el usuario ya existe, lo mandamos a la pantalla de vehículo directamente
-                    goToVehiculoActivity()
+                    // Si el perfil ya existe, ir directamente a HomeActivity
+                    goToHomeActivity()
                 } else if (response.code() == 404) {
-                    showFormularioCreacion()
+                    // Si no existe (404), muestra el formulario para crearlo
+                    showCreateForm()
+                } else {
+                    showError("Error al cargar el perfil: ${response.message()}")
                 }
             } catch (e: Exception) {
-                Log.e("ProfileActivity", "Error al cargar el perfil", e)
-                Toast.makeText(this@ProfileActivity, "Error al cargar perfil: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e("ProfileActivity", "Error de red al cargar el perfil", e)
+                showError("Error de red: ${e.message}")
             }
         }
     }
 
-    private fun showFormularioCreacion() {
+    private fun displayProfileData() {
+        currentUser?.let {
+            nombreText.text = "${it.nombre} ${it.apellidoPaterno} ${it.apellidoMaterno}"
+            fechaText.text = "Nacimiento: ${it.fechaNacimiento.substringBefore('T')}"
+            telefonoText.text = "Teléfono: ${it.telefono}"
+
+            profileFormContainer.visibility = View.GONE
+            profileViewContainer.visibility = View.VISIBLE
+        }
+    }
+
+    private fun showCreateForm() {
         formTitle.text = "Crear Perfil"
         clearForm()
         profileViewContainer.visibility = View.GONE
         profileFormContainer.visibility = View.VISIBLE
     }
 
-    private fun showFormularioEdicion() {
+    private fun showEditForm() {
         currentUser?.let {
             formTitle.text = "Editar Perfil"
             nombreInput.setText(it.nombre)
             apellidoPatInput.setText(it.apellidoPaterno)
             apellidoMatInput.setText(it.apellidoMaterno)
-            fechaInput.setText(it.fechaNacimiento)
+            fechaInput.setText(it.fechaNacimiento.substringBefore('T'))
             telefonoInput.setText(it.telefono)
 
             profileViewContainer.visibility = View.GONE
@@ -155,18 +163,29 @@ class ProfileActivity : AppCompatActivity() {
     private fun saveProfile() {
         val firebaseUser = FirebaseAuth.getInstance().currentUser
         if (firebaseUser == null) {
-            Toast.makeText(this, "Error: No hay usuario autenticado.", Toast.LENGTH_SHORT).show()
+            showError("Error: No hay usuario autenticado.")
+            return
+        }
+
+        val nombre = nombreInput.text.toString().trim()
+        val apellidoP = apellidoPatInput.text.toString().trim()
+        val apellidoM = apellidoMatInput.text.toString().trim()
+        val fecha = fechaInput.text.toString().trim()
+        val telefono = telefonoInput.text.toString().trim()
+
+        if (nombre.isEmpty() || apellidoP.isEmpty() || apellidoM.isEmpty() || fecha.isEmpty() || telefono.isEmpty()) {
+            showError("Todos los campos son obligatorios")
             return
         }
 
         val usuario = Usuario(
             idUsuario = currentUser?.idUsuario,
-            uidUsuario = firebaseUser.uid, // Siempre enviar el UID
-            nombre = nombreInput.text.toString(),
-            apellidoPaterno = apellidoPatInput.text.toString(),
-            apellidoMaterno = apellidoMatInput.text.toString(),
-            fechaNacimiento = fechaInput.text.toString(),
-            telefono = telefonoInput.text.toString()
+            uidUsuario = firebaseUser.uid,
+            nombre = nombre,
+            apellidoPaterno = apellidoP,
+            apellidoMaterno = apellidoM,
+            fechaNacimiento = fecha,
+            telefono = telefono
         )
 
         lifecycleScope.launch {
@@ -180,15 +199,15 @@ class ProfileActivity : AppCompatActivity() {
                 if (response.isSuccessful) {
                     val message = if (currentUser == null) "Perfil Creado" else "Perfil Actualizado"
                     Toast.makeText(this@ProfileActivity, message, Toast.LENGTH_SHORT).show()
-                    goToVehiculoActivity()
+                    goToHomeActivity()
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Error desconocido"
                     Log.e("ProfileActivity", "Fallo al guardar. Código: ${response.code()}, Mensaje: $errorBody")
-                    Toast.makeText(this@ProfileActivity, "Fallo al guardar: $errorBody", Toast.LENGTH_LONG).show()
+                    showError("Fallo al guardar: $errorBody")
                 }
             } catch (e: Exception) {
-                Log.e("ProfileActivity", "Error al guardar el perfil", e)
-                Toast.makeText(this@ProfileActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e("ProfileActivity", "Error de red al guardar el perfil", e)
+                showError("Error de red: ${e.message}")
             }
         }
     }
@@ -201,8 +220,8 @@ class ProfileActivity : AppCompatActivity() {
         telefonoInput.text?.clear()
     }
 
-    private fun goToVehiculoActivity() {
-        val intent = Intent(this, VehiculoActivity::class.java)
+    private fun goToHomeActivity() {
+        val intent = Intent(this, HomeActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -210,5 +229,9 @@ class ProfileActivity : AppCompatActivity() {
     private fun getStoredToken(): String {
         val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
         return prefs.getString("auth_token", "") ?: ""
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 }
