@@ -113,13 +113,16 @@ class ProfileActivity : AppCompatActivity() {
             try {
                 val response = apiService.getPerfil(token)
                 if (response.isSuccessful) {
-                    // Si el perfil ya existe, ir directamente a HomeActivity
                     goToHomeActivity()
                 } else if (response.code() == 404) {
-                    // Si no existe (404), muestra el formulario para crearlo
                     showCreateForm()
                 } else {
-                    showError("Error al cargar el perfil: ${response.message()}")
+                    // --- MANEJO DE ERRORES MEJORADO ---
+                    val errorBody = response.errorBody()?.string() ?: "Sin detalles"
+                    val errorCode = response.code()
+                    val errorMessage = "Error al cargar perfil (Código: $errorCode, Causa: $errorBody)"
+                    Log.e("ProfileActivity", errorMessage)
+                    showError(errorMessage) // Muestra el error detallado en el Toast
                 }
             } catch (e: Exception) {
                 Log.e("ProfileActivity", "Error de red al cargar el perfil", e)
