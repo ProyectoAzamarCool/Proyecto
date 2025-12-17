@@ -1,8 +1,8 @@
 package com.example.azamar
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -10,30 +10,31 @@ import android.speech.RecognizerIntent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
-import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
-import com.example.azamar.presentation.ui.ayudaexterna.AyudaExternaFragment
 import com.google.ai.client.generativeai.GenerativeModel
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.util.Locale
 
 class HomeActivity : AppCompatActivity() {
 
     private val REQUEST_CODE_SPEECH_INPUT = 1
     private val RECORD_AUDIO_PERMISSION_REQUEST_CODE = 2
+    private val CACHE_FILE_NAME = "last_bot_response.txt"
 
     private lateinit var promptInput: EditText
+    private lateinit var geminiResponseText: TextView
 
-    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -41,19 +42,19 @@ class HomeActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
 
         val welcome = findViewById<TextView>(R.id.welcomeText)
-        welcome.text = "Bienvenido"
+        welcome.text = "Hola ${user?.email}, bienvenido."
 
         promptInput = findViewById(R.id.prompt_input)
         val sendButton = findViewById<Button>(R.id.send_button)
         val voiceButton = findViewById<ImageButton>(R.id.voice_button)
-        val settingsButton = findViewById<ImageButton>(R.id.settings_button) // Botón de configuración
-        val geminiResponseText = findViewById<TextView>(R.id.gemini_response_text)
+        geminiResponseText = findViewById(R.id.gemini_response_text)
 
-        val fabAbogados = findViewById<FloatingActionButton>(R.id.fab_abogados)
-        fabAbogados.setOnClickListener {
-            // Muestra el Bottom Sheet con la lista de abogados
-            val bottomSheet = AyudaExternaFragment()
-            bottomSheet.show(supportFragmentManager, "AyudaExternaTag")
+        // Leer respuesta guardada al iniciar
+        lifecycleScope.launch {
+            val cachedResponse = readResponseFromCache()
+            if (cachedResponse.isNotEmpty()) {
+                geminiResponseText.text = cachedResponse
+            }
         }
 
         sendButton.setOnClickListener {
@@ -67,8 +68,11 @@ class HomeActivity : AppCompatActivity() {
                         )
 
                         val response = generativeModel.generateContent(prompt)
-
-                        geminiResponseText.text = response.text
+                        val responseText = response.text ?: ""
+                        
+                        geminiResponseText.text = responseText
+                        saveResponseToCache(responseText)
+                        
                     } catch (e: Exception) {
                         geminiResponseText.text = "Error: ${e.message}"
                     }
@@ -85,49 +89,36 @@ class HomeActivity : AppCompatActivity() {
                 startVoiceRecognition()
             }
         }
-
-        settingsButton.setOnClickListener {
-            showSettingsMenu(it)
-        }
     }
 
-    private fun showSettingsMenu(anchor: android.view.View) {
-        val popupMenu = PopupMenu(this, anchor)
-        popupMenu.menu.add(0, 1, 0, "Ver Perfil")
-        popupMenu.menu.add(0, 2, 1, "Cerrar Sesión")
-
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                1 -> {
-                    // Navegar a ProfileActivity con una indicación para mostrar el perfil
-                    val intent = Intent(this, ProfileActivity::class.java)
-                    intent.putExtra("SHOW_PROFILE_VIEW", true)
-                    startActivity(intent)
-                    true
+    private suspend fun saveResponseToCache(text: String) {
+        withContext(Dispatchers.IO) {
+            try {
+                val file = File(cacheDir, CACHE_FILE_NAME)
+                FileOutputStream(file).use { output ->
+                    output.write(text.toByteArray())
                 }
-                2 -> {
-                    // Lógica para Cerrar Sesión
-                    signOut()
-                    true
-                }
-                else -> false
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
-        popupMenu.show()
     }
 
-    private fun signOut() {
-        // Cerrar sesión en Firebase
-        FirebaseAuth.getInstance().signOut()
-
-        // Cerrar sesión en Google (importante para poder cambiar de cuenta)
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
-        val googleSignInClient = GoogleSignIn.getClient(this, gso)
-        googleSignInClient.signOut().addOnCompleteListener {
-            // Navegar a LoginActivity y limpiar el historial de pantallas
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+    private suspend fun readResponseFromCache(): String {
+        return withContext(Dispatchers.IO) {
+            try {
+                val file = File(cacheDir, CACHE_FILE_NAME)
+                if (file.exists()) {
+                    FileInputStream(file).use { input ->
+                        input.bufferedReader().use { it.readText() }
+                    }
+                } else {
+                    ""
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                ""
+            }
         }
     }
 
