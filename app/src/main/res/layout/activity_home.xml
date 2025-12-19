@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -11,9 +12,10 @@
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:textColor="@color/white"
         tools:text="Hola usuario, bienvenido." />
 
@@ -23,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="85dp"
+        android:layout_marginEnd="67dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Descargar conversación"
         android:src="@android:drawable/stat_sys_download" />
@@ -34,9 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="-8dp"
-        android:text="Enviar"
+        android:text="@string/enviar"
         android:textColor="@color/ambar" />
 
     <ImageButton
@@ -47,17 +47,16 @@
         android:layout_toStartOf="@+id/send_button"
         android:src="@android:drawable/ic_btn_speak_now"
         android:background="@color/black"
-        android:contentDescription="Entrada por voz" />
+        android:contentDescription="@string/entrada_por_voz" />
 
     <EditText
         android:id="@+id/prompt_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@id/voice_button"
+        android:layout_toStartOf="@+id/voice_button"
         android:background="@color/black"
-        android:hint="Escribe tu texto aquí"
+        android:hint="@string/escribe_tu_texto_aqu"
         android:textColorHint="@color/ambar"
         android:textColor="@color/ambar"/>
 
@@ -82,9 +81,33 @@
 
     </ScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_abogados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/send_button"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/ic_warning"
+        android:contentDescription="Ayuda Externa" />
+
     <Button
         android:id="@+id/btnMapa"
         android:layout_width="34dp"
         android:layout_height="wrap_content"
         android:src="@drawable/baseline_map_24" />
+
+    <!-- Botón de Configuración añadido -->
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/configuracion"
+        android:src="@drawable/ic_menu_manage"
+        app:tint="@color/white" />
 </RelativeLayout>
