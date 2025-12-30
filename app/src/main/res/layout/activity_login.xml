@@ -27,7 +27,8 @@
             android:background="@drawable/rounded_input"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textColorHint="@color/gris_texto_hint" />
 
         <EditText
             android:id="@+id/editPassword"
@@ -38,7 +39,8 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
             android:maxLines="1"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textColorHint="@color/gris_texto_hint" />
 
         <!-- BOTÓN OLVIDÓ CONTRASEÑA -->
         <TextView
@@ -46,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="¿Olvidaste tu contraseña?"
-            android:textColor="@color/azul_medio"
+            android:textColor="@color/azul_oscuro"
             android:layout_marginTop="15dp" />
 
         <Button
@@ -68,7 +70,7 @@
             android:textColor="@color/azul_oscuro" />
 
 
-        <!-- BOTÓN GOOGLE -->
+        <!-- BOTÓN GOOGLE (CORREGIDO) -->
         <Button
             android:id="@+id/btnGoogleLogin"
             android:layout_width="match_parent"

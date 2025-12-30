@@ -3,68 +3,81 @@ package com.example.azamar
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
+import android.text.method.ScrollingMovementMethod
+import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.azamar.databinding.ActivityRegisterBinding // ¡Importante! Asegúrate de que este import se añada
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    // Se añade la variable para View Binding
+    private lateinit var binding: ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        // Se infla el layout usando View Binding
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
 
-        val email = findViewById<EditText>(R.id.editEmail)
-        val password = findViewById<EditText>(R.id.editPassword)
-        val btnRegister = findViewById<Button>(R.id.btnRegister)
-        val checkTerms = findViewById<CheckBox>(R.id.checkTerms)
-        val textMoreInfo = findViewById<TextView>(R.id.textMoreInfo)
+        // El botón de registro empieza deshabilitado (como lo definimos en el XML)
+        // binding.btnRegister.isEnabled = false // No es necesario si ya está en el XML, pero es buena práctica
 
         val prefs = getSharedPreferences("AzamarPrefs", Context.MODE_PRIVATE)
 
-        textMoreInfo.setOnClickListener {
-            showTermsDialog()
+        // --- LÓGICA PARA TÉRMINOS Y CONDICIONES ---
+
+        // 1. Habilitar/deshabilitar el botón de registro al marcar el CheckBox
+        binding.checkTerms.setOnCheckedChangeListener { _, isChecked ->
+            binding.btnRegister.isEnabled = isChecked
         }
 
-        btnRegister.setOnClickListener {
+        // 2. Mostrar/ocultar el texto de los TyC al hacer clic en el TextView
+        binding.tvDesplegarTyC.setOnClickListener {
+            if (binding.tvContenidoTyC.visibility == View.VISIBLE) {
+                binding.tvContenidoTyC.visibility = View.GONE
+            } else {
+                binding.tvContenidoTyC.visibility = View.VISIBLE
+            }
+        }
 
-            if (!checkTerms.isChecked) {
-                Toast.makeText(this, "Debes aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
+        // 3. (Opcional) Hacer que el texto de los TyC sea "scrollable" por si es muy largo
+        binding.tvContenidoTyC.movementMethod = ScrollingMovementMethod.getInstance()
+
+        // 4. Se elimina el texto del CheckBox para que no se duplique con el TextView clicable
+        binding.checkTerms.text = ""
+
+
+        // --- LÓGICA DEL BOTÓN DE REGISTRO ---
+        binding.btnRegister.setOnClickListener {
+            val email = binding.editEmail.text.toString().trim()
+            val password = binding.editPassword.text.toString().trim()
+
+            // Verificaciones básicas
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            auth.createUserWithEmailAndPassword(
-                email.text.toString(),
-                password.text.toString()
-            ).addOnCompleteListener { task ->
-
-                if (task.isSuccessful) {
-                    prefs.edit().putBoolean("termsAccepted", true).apply()
-                    Toast.makeText(this, "Cuenta creada", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    finish()
-                } else {
-                    Toast.makeText(this, "Error al registrar", Toast.LENGTH_SHORT).show()
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        prefs.edit().putBoolean("termsAccepted", true).apply()
+                        Toast.makeText(this, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
+                        startActivity(Intent(this, ProfileActivity::class.java))
+                        finish() // Cierra esta actividad para que el usuario no pueda volver atrás
+                    } else {
+                        // Muestra un error más específico si es posible
+                        val errorMessage = task.exception?.message ?: "Error desconocido al registrar"
+                        Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_LONG).show()
+                    }
                 }
-            }
         }
     }
 
-    private fun showTermsDialog() {
-        AlertDialog.Builder(this)
-            .setTitle("Términos y Condiciones")
-            .setMessage(R.string.full_terms_and_conditions)
-            .setPositiveButton("Cerrar") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
-    }
 }
+
