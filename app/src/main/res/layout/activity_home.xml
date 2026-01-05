@@ -79,37 +79,19 @@
         app:layout_constraintTop_toTopOf="@id/header_bg"
         app:tint="@color/white" />
 
-    <!-- Conversation Area -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/response_card"
+    <!-- Conversation Area (Chat Bubbles Style) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chat_recycler_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="16dp"
-        app:cardBackgroundColor="#12253D"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
+        android:layout_marginBottom="8dp"
+        android:clipToPadding="false"
+        android:padding="16dp"
         app:layout_constraintBottom_toTopOf="@+id/input_container"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header_bg">
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fadeScrollbars="false"
-            android:padding="8dp"
-            android:scrollbarStyle="outsideOverlay">
-
-            <TextView
-                android:id="@+id/gemini_response_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:lineSpacingExtra="4dp"
-                android:textColor="@color/white"
-                android:textSize="15sp"
-                tools:text="Respuesta de Gemini aquí..." />
-        </ScrollView>
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toBottomOf="@id/header_bg"
+        tools:listitem="@android:layout/simple_list_item_1" />
 
     <!-- FAB Abogados -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -131,6 +113,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/azul_medio"
+        android:elevation="8dp"
         android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
