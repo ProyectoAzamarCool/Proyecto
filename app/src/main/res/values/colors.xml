@@ -13,4 +13,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="rojo_google">#DB4437</color>
+
+    <!-- Color añadido para mejorar contraste de hints -->
+    <color name="gris_texto_hint">#757575</color>
 </resources>

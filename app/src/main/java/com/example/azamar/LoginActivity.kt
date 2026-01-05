@@ -85,10 +85,15 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        // --- LÍNEA MODIFICADA ---
+        // Se comenta esta línea para evitar el error de compilación.
+        // DEBES añadir el botón con id 'btnGoogleLogin' a tu XML y luego descomentar esto.
+        /*
         binding.btnGoogleLogin.setOnClickListener {
             val signInIntent = googleClient.signInIntent
             startActivityForResult(signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
         }
+        */
 
         binding.btnGoRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
