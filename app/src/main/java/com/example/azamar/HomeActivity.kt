@@ -8,9 +8,11 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +20,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.azamar.presentation.ui.ayudaexterna.AyudaExternaFragment
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
         promptInput = findViewById(R.id.prompt_input)
         val sendButton = findViewById<Button>(R.id.send_button)
         val voiceButton = findViewById<ImageButton>(R.id.voice_button)
+        val settingsButton = findViewById<ImageButton>(R.id.settings_button)
         val downloadButton = findViewById<ImageButton>(R.id.download_button)
         geminiResponseText = findViewById(R.id.gemini_response_text)
 
@@ -58,6 +65,13 @@ class HomeActivity : AppCompatActivity() {
             if (cachedHistory.isNotEmpty()) {
                 geminiResponseText.text = cachedHistory
             }
+        }
+
+        val fabAbogados = findViewById<FloatingActionButton>(R.id.fab_abogados)
+        fabAbogados.setOnClickListener {
+            // Muestra el Bottom Sheet con la lista de abogados
+            val bottomSheet = AyudaExternaFragment()
+            bottomSheet.show(supportFragmentManager, "AyudaExternaTag")
         }
 
         // 🔹 BOTÓN MAPA (AGREGADO)
@@ -116,6 +130,52 @@ class HomeActivity : AppCompatActivity() {
 
         downloadButton.setOnClickListener {
             exportConversation()
+        }
+
+        settingsButton.setOnClickListener {
+            showSettingsMenu(it)
+        }
+    }
+
+    private fun showSettingsMenu(anchor: View) {
+        val popupMenu = PopupMenu(this, anchor)
+        popupMenu.menu.add(0, 1, 0, "Ver Perfil")
+        popupMenu.menu.add(0, 2, 1, "Cerrar Sesión")
+
+        popupMenu.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                1 -> {
+                    // Navegar a ProfileActivity con una indicación para mostrar el perfil
+                    val intent = Intent(this, ProfileActivity::class.java)
+                    intent.putExtra("SHOW_PROFILE_VIEW", true)
+                    startActivity(intent)
+                    true
+                }
+
+                2 -> {
+                    // Lógica para Cerrar Sesión
+                    signOut()
+                    true
+                }
+
+                else -> false
+            }
+        }
+        popupMenu.show()
+    }
+
+    private fun signOut() {
+        // Cerrar sesión en Firebase
+        FirebaseAuth.getInstance().signOut()
+
+        // Cerrar sesión en Google (importante para poder cambiar de cuenta)
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
+        val googleSignInClient = GoogleSignIn.getClient(this, gso)
+        googleSignInClient.signOut().addOnCompleteListener {
+            // Navegar a LoginActivity y limpiar el historial de pantallas
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(intent)
         }
     }
 
