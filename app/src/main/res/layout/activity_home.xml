@@ -1,113 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".HomeActivity"
-    android:background="@color/azul_medio">
+    android:background="@color/azul_oscuro"
+    tools:context=".HomeActivity">
+
+    <!-- Top Bar / Header Area -->
+    <View
+        android:id="@+id/header_bg"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:background="@color/azul_medio"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/welcomeText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:textSize="15sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/header_bg"
+        app:layout_constraintEnd_toStartOf="@+id/btnMapa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header_bg"
         tools:text="Hola usuario, bienvenido." />
 
     <ImageButton
-        android:id="@+id/download_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="67dp"
+        android:id="@+id/btnMapa"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Descargar conversación"
-        android:src="@android:drawable/stat_sys_download" />
-
-    <Button
-        android:id="@+id/send_button"
-        android:layout_width="113dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:text="@string/enviar"
-        android:textColor="@color/ambar" />
+        android:contentDescription="Ver Mapa"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/baseline_map_24"
+        app:layout_constraintBottom_toBottomOf="@id/header_bg"
+        app:layout_constraintEnd_toStartOf="@id/download_button"
+        app:layout_constraintTop_toTopOf="@id/header_bg"
+        app:tint="@color/white" />
 
     <ImageButton
-        android:id="@+id/voice_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/send_button"
-        android:src="@android:drawable/ic_btn_speak_now"
-        android:background="@color/black"
-        android:contentDescription="@string/entrada_por_voz" />
+        android:id="@+id/download_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Descargar conversación"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@android:drawable/stat_sys_download"
+        app:layout_constraintBottom_toBottomOf="@id/header_bg"
+        app:layout_constraintEnd_toStartOf="@id/settings_button"
+        app:layout_constraintTop_toTopOf="@id/header_bg"
+        app:tint="@color/white" />
 
-    <EditText
-        android:id="@+id/prompt_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/voice_button"
-        android:background="@color/black"
-        android:hint="@string/escribe_tu_texto_aqu"
-        android:textColorHint="@color/ambar"
-        android:textColor="@color/ambar"/>
+    <ImageButton
+        android:id="@+id/settings_button"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/configuracion"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_menu_manage"
+        app:layout_constraintBottom_toBottomOf="@id/header_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/header_bg"
+        app:tint="@color/white" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/prompt_input"
-        android:layout_below="@id/welcomeText"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="16dp"
-        android:background="@color/black">
+    <!-- Conversation Area -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/response_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="#12253D"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/input_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_bg">
 
-        <TextView
-            android:id="@+id/gemini_response_text"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:layout_height="match_parent"
+            android:fadeScrollbars="false"
             android:padding="8dp"
-            android:textColor="@color/ambar"
-            android:textSize="16sp"
-            tools:text="Respuesta de Gemini aquí." />
+            android:scrollbarStyle="outsideOverlay">
 
-    </ScrollView>
+            <TextView
+                android:id="@+id/gemini_response_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="4dp"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                tools:text="Respuesta de Gemini aquí..." />
+        </ScrollView>
+    </androidx.cardview.widget.CardView>
 
+    <!-- FAB Abogados -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_abogados"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_above="@id/send_button"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="16dp"
+        android:contentDescription="Ayuda Externa"
         android:src="@drawable/ic_warning"
-        android:contentDescription="Ayuda Externa" />
+        app:backgroundTint="@color/ambar"
+        app:layout_constraintBottom_toTopOf="@+id/input_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/black" />
 
-    <Button
-        android:id="@+id/btnMapa"
-        android:layout_width="34dp"
+    <!-- Bottom Input Container -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/input_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:src="@drawable/baseline_map_24" />
+        android:background="@color/azul_medio"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <!-- Botón de Configuración añadido -->
-    <ImageButton
-        android:id="@+id/settings_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/configuracion"
-        android:src="@drawable/ic_menu_manage"
-        app:tint="@color/white" />
-</RelativeLayout>
+        <EditText
+            android:id="@+id/prompt_input"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/rounded_input"
+            android:hint="@string/escribe_tu_texto_aqu"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:maxLines="4"
+            android:minHeight="48dp"
+            android:padding="12dp"
+            android:textColor="@color/azul_oscuro"
+            android:textColorHint="#757575"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/voice_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/voice_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/entrada_por_voz"
+            android:src="@android:drawable/ic_btn_speak_now"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send_button"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/ambar" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/send_button"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enviar"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            app:backgroundTint="@color/ambar"
+            app:cornerRadius="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

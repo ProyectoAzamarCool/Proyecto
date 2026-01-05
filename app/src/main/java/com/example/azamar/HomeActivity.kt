@@ -34,6 +34,7 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Locale
 
+
 class HomeActivity : AppCompatActivity() {
 
     private val REQUEST_CODE_SPEECH_INPUT = 1
@@ -53,7 +54,7 @@ class HomeActivity : AppCompatActivity() {
         welcome.text = "Hola ${user?.email}, bienvenido."
 
         promptInput = findViewById(R.id.prompt_input)
-        val sendButton = findViewById<Button>(R.id.send_button)
+        val sendButton = findViewById<View>(R.id.send_button) // Usar View genérico o MaterialButton para evitar ClassCastException
         val voiceButton = findViewById<ImageButton>(R.id.voice_button)
         val settingsButton = findViewById<ImageButton>(R.id.settings_button)
         val downloadButton = findViewById<ImageButton>(R.id.download_button)
@@ -74,8 +75,8 @@ class HomeActivity : AppCompatActivity() {
             bottomSheet.show(supportFragmentManager, "AyudaExternaTag")
         }
 
-        // 🔹 BOTÓN MAPA (AGREGADO)
-        val botonMapa = findViewById<Button>(R.id.btnMapa)
+        // 🔹 BOTÓN MAPA
+        val botonMapa = findViewById<ImageButton>(R.id.btnMapa)
         botonMapa.setOnClickListener {
             startActivity(Intent(this, MapActivity::class.java))
         }
