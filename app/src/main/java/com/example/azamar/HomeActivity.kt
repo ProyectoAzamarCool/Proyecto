@@ -109,7 +109,7 @@ class HomeActivity : AppCompatActivity() {
                 lifecycleScope.launch {
                     try {
                         val generativeModel = GenerativeModel(
-                            modelName = "gemini-2.0-flash-lite",
+                            modelName = "gemini-2.5-flash-lite",
                             apiKey = BuildConfig.apiKey
                         )
 

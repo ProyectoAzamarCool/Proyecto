@@ -112,50 +112,62 @@
         android:id="@+id/input_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/azul_medio"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="16dp"
         android:elevation="8dp"
-        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <EditText
-            android:id="@+id/prompt_input"
+        <!-- Pill container for text and mic -->
+        <LinearLayout
+            android:id="@+id/pill_input_group"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:background="@drawable/rounded_input"
-            android:hint="@string/escribe_tu_texto_aqu"
-            android:importantForAutofill="no"
-            android:inputType="textMultiLine"
-            android:maxLines="4"
-            android:minHeight="48dp"
-            android:padding="12dp"
-            android:textColor="@color/azul_oscuro"
-            android:textColorHint="#757575"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/voice_button"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/voice_button"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/entrada_por_voz"
-            android:src="@android:drawable/ic_btn_speak_now"
+            android:background="@drawable/bg_pill_input"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/send_button"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/ambar" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <EditText
+                android:id="@+id/prompt_input"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/escribe_tu_texto_aqu"
+                android:importantForAutofill="no"
+                android:inputType="textMultiLine"
+                android:maxLines="4"
+                android:minHeight="48dp"
+                android:padding="12dp"
+                android:textColor="@color/azul_oscuro"
+                android:textColorHint="#757575" />
+
+            <ImageButton
+                android:id="@+id/voice_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/entrada_por_voz"
+                android:src="@android:drawable/ic_btn_speak_now"
+                app:tint="@color/azul_medio" />
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/send_button"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="0dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/enviar"
             android:textAllCaps="false"
             android:textColor="@color/black"
