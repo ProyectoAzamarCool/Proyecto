@@ -1,14 +1,22 @@
 package com.example.azamar
 
+import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +33,8 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import java.io.File
+import java.io.FileOutputStream
 
 // --- Data Classes ---
 data class Usuario(
@@ -44,8 +54,7 @@ data class VehiculoPerfil(
     @SerializedName("tipo_nombre") val tipo: String
 )
 
-
-// --- API Service (Ahora con vehículos) ---
+// --- API Service ---
 interface UsuarioApiService {
     @GET("info-usuario")
     suspend fun getPerfil(@Header("Authorization") token: String): Response<Usuario>
@@ -79,7 +88,10 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var telefonoText: TextView
     private lateinit var btnEditar: Button
     private lateinit var btnAddVehiculo: Button
-    // Vistas del formulario de perfil (se inicializan más tarde)
+    private lateinit var profileImage: ImageView
+    private lateinit var btnEditPhoto: ImageButton
+
+    // Vistas del formulario de perfil
     private lateinit var nombreInput: TextInputEditText
     private lateinit var apellidoPatInput: TextInputEditText
     private lateinit var apellidoMatInput: TextInputEditText
@@ -88,16 +100,25 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var btnGuardar: Button
     private lateinit var formTitle: TextView
 
+    // Launcher para seleccionar imagen
+    private val imagePickerLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                saveProfileImageLocally(uri)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
 
-        // Inicialización
         initializeViews()
         token = "Bearer ${getStoredToken()}"
         apiService = RetrofitClient.instance.create(UsuarioApiService::class.java)
 
-        // Lógica principal
         val shouldShowProfile = intent.getBooleanExtra("SHOW_PROFILE_VIEW", false)
         if (shouldShowProfile) {
             loadAndShowProfileAndVehicles()
@@ -115,16 +136,115 @@ class ProfileActivity : AppCompatActivity() {
         telefonoText = findViewById(R.id.telefonoText)
         btnEditar = findViewById(R.id.btnEditar)
         btnAddVehiculo = findViewById(R.id.btnAddVehiculo)
+        profileImage = findViewById(R.id.profileImage)
+        btnEditPhoto = findViewById(R.id.btnEditPhoto)
 
-        btnAddVehiculo.setOnClickListener { 
+        btnAddVehiculo.setOnClickListener {
             val intent = Intent(this, VehiculoActivity::class.java)
-            intent.putExtra("FORCE_SHOW_FORM", true) // <-- LA SEÑAL
+            intent.putExtra("FORCE_SHOW_FORM", true)
             startActivity(intent)
         }
+
         btnEditar.setOnClickListener { showEditForm() }
+        btnEditPhoto.setOnClickListener { showImagePickerDialog() }
+
+        loadProfileImage()
     }
 
-    // Carga perfil y vehículos para mostrarlos
+    private fun showImagePickerDialog() {
+        val options = arrayOf("Seleccionar de galería", "Tomar foto", "Eliminar foto")
+        AlertDialog.Builder(this)
+            .setTitle("Foto de perfil")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> openGallery()
+                    1 -> openCamera()
+                    2 -> deleteProfileImage()
+                }
+            }
+            .show()
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        imagePickerLauncher.launch(intent)
+    }
+
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        cameraCaptureResult.launch(intent)
+    }
+
+    private val cameraCaptureResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageBitmap = result.data?.extras?.get("data") as? Bitmap
+            imageBitmap?.let {
+                saveProfileImageFromBitmap(it)
+            }
+        }
+    }
+
+    private fun saveProfileImageLocally(uri: Uri) {
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            inputStream?.close()
+
+            saveProfileImageFromBitmap(bitmap)
+        } catch (e: Exception) {
+            Log.e("ProfileActivity", "Error al guardar imagen", e)
+            Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun saveProfileImageFromBitmap(bitmap: Bitmap) {
+        try {
+            val file = File(filesDir, "profile_image.jpg")
+            val outputStream = FileOutputStream(file)
+
+            // Comprimir y redimensionar la imagen
+            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, true)
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+
+            outputStream.flush()
+            outputStream.close()
+
+            profileImage.setImageBitmap(scaledBitmap)
+            Toast.makeText(this, "Foto actualizada", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Log.e("ProfileActivity", "Error al guardar imagen", e)
+            Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun loadProfileImage() {
+        try {
+            val file = File(filesDir, "profile_image.jpg")
+            if (file.exists()) {
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                profileImage.setImageBitmap(bitmap)
+            }
+        } catch (e: Exception) {
+            Log.e("ProfileActivity", "Error al cargar imagen", e)
+        }
+    }
+
+    private fun deleteProfileImage() {
+        try {
+            val file = File(filesDir, "profile_image.jpg")
+            if (file.exists()) {
+                file.delete()
+                profileImage.setImageResource(R.drawable.ic_profile_placeholder)
+                Toast.makeText(this, "Foto eliminada", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Log.e("ProfileActivity", "Error al eliminar imagen", e)
+            Toast.makeText(this, "Error al eliminar la imagen", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun loadAndShowProfileAndVehicles() {
         lifecycleScope.launch {
             try {
@@ -158,8 +278,8 @@ class ProfileActivity : AppCompatActivity() {
     private fun displayProfileData() {
         currentUser?.let {
             nombreText.text = "${it.nombre} ${it.apellidoPaterno} ${it.apellidoMaterno}"
-            fechaText.text = "Nacimiento: ${it.fechaNacimiento.substringBefore('T')}"
-            telefonoText.text = "Teléfono: ${it.telefono}"
+            fechaText.text = it.fechaNacimiento.substringBefore('T')
+            telefonoText.text = it.telefono
             profileViewContainer.visibility = View.VISIBLE
         }
     }
@@ -170,6 +290,8 @@ class ProfileActivity : AppCompatActivity() {
             val noVehiclesText = TextView(this).apply {
                 text = "No tienes vehículos registrados."
                 gravity = Gravity.CENTER
+                setTextColor(getColor(R.color.gris_texto_hint))
+                setPadding(0, 16, 0, 16)
             }
             vehiclesContainer.addView(noVehiclesText)
         } else {
@@ -182,27 +304,59 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun createVehicleView(vehicle: VehiculoPerfil): View {
         val linearLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setPadding(16, 12, 16, 12)
+            setBackgroundResource(R.drawable.vehicle_item_background)
+        }
+
+        val infoLayout = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
-            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
             gravity = Gravity.CENTER_VERTICAL
-            setPadding(0, 8, 0, 8)
         }
 
         val infoText = TextView(this).apply {
-            text = "${vehicle.modelo} - ${vehicle.placa} (${vehicle.tipo})"
+            text = "${vehicle.modelo} - ${vehicle.placa}"
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
+            setTextColor(getColor(R.color.azul_oscuro))
+            textSize = 16f
+        }
+
+        val tipoText = TextView(this).apply {
+            text = vehicle.tipo
+            setTextColor(getColor(R.color.gris_texto_hint))
+            textSize = 12f
         }
 
         val deleteButton = Button(this).apply {
             text = "Eliminar"
+            setBackgroundColor(getColor(R.color.rojo_google))
+            setTextColor(getColor(R.color.blanco))
             setOnClickListener { showDeleteConfirmationDialog(vehicle) }
         }
 
-        linearLayout.addView(infoText)
-        linearLayout.addView(deleteButton)
+        infoLayout.addView(infoText)
+        infoLayout.addView(deleteButton)
+        linearLayout.addView(infoLayout)
+        linearLayout.addView(tipoText)
+
+        val spacer = View(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 8
+            )
+        }
+        linearLayout.addView(spacer)
+
         return linearLayout
     }
-    
+
     private fun showDeleteConfirmationDialog(vehicle: VehiculoPerfil) {
         AlertDialog.Builder(this)
             .setTitle("Confirmar Eliminación")
@@ -228,7 +382,6 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
-    // --- Código anterior (redirección, creación, etc.) ---
     private fun loadProfileAndRedirect() {
         lifecycleScope.launch {
             try {
@@ -312,8 +465,6 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
     }
-    
-    // --- Funciones de Ayuda ---
 
     private fun handleApiError(response: Response<*>, action: String) {
         val errorBody = response.errorBody()?.string() ?: "Sin detalles"
