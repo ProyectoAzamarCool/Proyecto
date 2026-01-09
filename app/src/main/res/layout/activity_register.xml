@@ -27,7 +27,9 @@
             android:background="@drawable/rounded_input"
             android:inputType="textEmailAddress"
             android:maxLines="1"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textColor="@color/azul_oscuro"
+            android:textColorHint="@color/gris_texto_hint" />
 
         <EditText
             android:id="@+id/editPassword"
@@ -38,56 +40,17 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
             android:maxLines="1"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:textColor="@color/azul_oscuro"
+            android:textColorHint="@color/gris_texto_hint" />
 
-        <!-- INICIO DE LA SECCIÓN MODIFICADA DE TÉRMINOS Y CONDICIONES -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <CheckBox
+            android:id="@+id/checkTerms"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="15dp"
-            android:gravity="center_vertical">
-
-            <CheckBox
-                android:id="@+id/checkTerms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <!-- Este es el texto que ahora será clicable -->
-            <TextView
-                android:id="@+id/tvDesplegarTyC"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/terms_and_conditions"
-                android:textColor="@color/azul_medio"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-        <!-- Texto de los Términos y Condiciones que se mostrará/ocultará -->
-        <TextView
-            android:id="@+id/tvContenidoTyC"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="     Al utilizar nuestra aplicación, usted acepta estar sujeto a estos términos y condiciones. Si no está de acuerdo con alguna parte de los términos, no podrá utilizar nuestros servicios.\n\n
-        **2. Descripción del Servicio**\n
-        Sin sorjuanas es un asistente legal automotriz que proporciona información y asistencia automatizada. No reemplaza el consejo de un profesional legal calificado. La información proporcionada por la aplicación es solo para fines informativos.\n\n
-        **3. Uso Aceptable**\n
-        Usted se compromete a no utilizar la aplicación para ningún propósito ilegal o no autorizado. Se prohíbe el uso de la aplicación para transmitir cualquier contenido que sea ilegal, acosador, difamatorio, abusivo, amenazante, dañino o de cualquier otra manera objetable.\n\n
-        **4. Cuentas de Usuario**\n
-        Para acceder a ciertas funciones de la aplicación, es posible que deba registrarse para obtener una cuenta. Usted es responsable de mantener la confidencialidad de la información de su cuenta y de todas las actividades que ocurran bajo su cuenta.\n\n
-        **5. Propiedad Intelectual**\n
-        Todo el contenido y los materiales disponibles en Sin sorjuanas, incluidos, entre otros, texto, gráficos, logotipos, iconos de botones, imágenes y compilaciones de datos, son propiedad de Sin sorjuanas o sus licenciantes y están protegidos por las leyes de derechos de autor.\n\n
-        **6. Limitación de Responsabilidad**\n
-        Sin Sorjuanas no será responsable de ningún daño directo, indirecto, incidental, especial, consecuente o ejemplar que resulte del uso o la imposibilidad de usar el servicio.\n\n
-        **7. Modificaciones a los Términos**\n
-        Nos reservamos el derecho de modificar estos términos en cualquier momento. Su uso continuado de la aplicación después de cualquier cambio constituirá su aceptación de los nuevos términos."
-            android:layout_marginTop="8dp"
-            android:padding="10dp"
-            android:background="@android:drawable/editbox_background_normal"
-            android:visibility="gone" /> <!-- Empieza oculto -->
-
-        <!-- FIN DE LA SECCIÓN MODIFICADA -->
+            android:text="@string/terms_and_conditions"
+            android:textColor="@color/azul_oscuro" />
 
         <Button
             android:id="@+id/btnRegister"
@@ -96,8 +59,7 @@
             android:text="Registrar"
             android:layout_marginTop="25dp"
             android:backgroundTint="@color/azul_medio"
-            android:textColor="@color/blanco"
-            android:enabled="false" /> <!-- Empieza deshabilitado -->
+            android:textColor="@color/blanco" />
 
     </LinearLayout>
 

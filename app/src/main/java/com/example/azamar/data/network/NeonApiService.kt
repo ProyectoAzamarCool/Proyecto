@@ -3,6 +3,8 @@ package com.example.azamar.data.network
 import retrofit2.Response
 import retrofit2.http.GET
 import com.example.azamar.data.model.Abogado // Importa el modelo de Abogado
+import com.example.azamar.data.model.Reglamento
+
 // IMPORTACIÓN PENDIENTE:
 // import com.example.pruebas.data.Articulo
 
@@ -14,6 +16,6 @@ interface NeonApiService {
     suspend fun getAbogados(): Response<List<Abogado>>
 
     // Endpoint PENDIENTE para el reglamento (Artículos)
-    // @GET("api/v1/articulos")
-    // suspend fun getArticulos(): Response<List<Articulo>>
+    @GET("reglamentos") // Asegúrate de que este sea el nombre de tu tabla en la API
+    suspend fun getReglamentoActualizado(): List<Reglamento>
 }

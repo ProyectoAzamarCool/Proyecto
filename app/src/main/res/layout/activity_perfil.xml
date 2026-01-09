@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:background="@color/gris_fondo"
     tools:context=".ProfileActivity">
 
     <LinearLayout
@@ -20,64 +21,233 @@
             android:visibility="gone"
             tools:visibility="visible">
 
+            <!-- HEADER CON FOTO DE PERFIL -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@drawable/profile_header_gradient">
+
+                <ImageView
+                    android:id="@+id/profileImage"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/profile_image_background"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_profile_placeholder"
+                    android:contentDescription="Foto de perfil" />
+
+                <ImageButton
+                    android:id="@+id/btnEditPhoto"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignBottom="@id/profileImage"
+                    android:layout_alignEnd="@id/profileImage"
+                    android:layout_marginEnd="-8dp"
+                    android:layout_marginBottom="-8dp"
+                    android:background="@drawable/edit_photo_button_background"
+                    android:src="@android:drawable/ic_menu_camera"
+                    app:tint="@color/azul_oscuro"
+                    android:contentDescription="Editar foto"
+                    android:padding="8dp" />
+
+            </RelativeLayout>
+
             <!-- SECCIÓN DATOS DE USUARIO -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Perfil de Usuario"
-                android:textAppearance="?attr/textAppearanceHeadline5" />
-
-            <TextView
-                android:id="@+id/nombreText"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textAppearance="?attr/textAppearanceBody1"
-                tools:text="Nombre Completo" />
+                android:layout_margin="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@color/blanco">
 
-            <TextView
-                android:id="@+id/fechaText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textAppearance="?attr/textAppearanceBody1"
-                tools:text="Fecha de Nacimiento" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
 
-            <TextView
-                android:id="@+id/telefonoText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textAppearance="?attr/textAppearanceBody1"
-                tools:text="Teléfono" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Información Personal"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/azul_oscuro"
+                        android:layout_marginBottom="16dp" />
 
-            <Button
-                android:id="@+id/btnEditar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Editar Perfil"/>
+                    <!-- NOMBRE -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_myplaces"
+                            app:tint="@color/ambar"
+                            android:layout_marginEnd="12dp"
+                            android:contentDescription="Icono nombre" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Nombre Completo"
+                                android:textSize="12sp"
+                                android:textColor="@color/gris_texto_hint" />
+
+                            <TextView
+                                android:id="@+id/nombreText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="@color/azul_oscuro"
+                                android:textStyle="bold"
+                                tools:text="Juan Pérez González" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- FECHA NACIMIENTO -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/ic_menu_today"
+                            app:tint="@color/ambar"
+                            android:layout_marginEnd="12dp"
+                            android:contentDescription="Icono fecha" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fecha de Nacimiento"
+                                android:textSize="12sp"
+                                android:textColor="@color/gris_texto_hint" />
+
+                            <TextView
+                                android:id="@+id/fechaText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="@color/azul_oscuro"
+                                tools:text="1990-01-15" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- TELÉFONO -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@android:drawable/stat_sys_phone_call"
+                            app:tint="@color/ambar"
+                            android:layout_marginEnd="12dp"
+                            android:contentDescription="Icono teléfono" />
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Teléfono"
+                                android:textSize="12sp"
+                                android:textColor="@color/gris_texto_hint" />
+
+                            <TextView
+                                android:id="@+id/telefonoText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="16sp"
+                                android:textColor="@color/azul_oscuro"
+                                tools:text="555-1234-5678" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btnEditar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Editar Perfil"
+                        android:backgroundTint="@color/azul_medio"
+                        android:textColor="@color/blanco"
+                        app:cornerRadius="8dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
             <!-- SECCIÓN VEHÍCULOS -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:text="Mis Vehículos"
-                android:textAppearance="?attr/textAppearanceHeadline5" />
-
-            <LinearLayout
-                android:id="@+id/vehiclesContainer"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@color/blanco">
 
-            <Button
-                android:id="@+id/btnAddVehiculo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Añadir Vehículo" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mis Vehículos"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/azul_oscuro"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:id="@+id/vehiclesContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" />
+
+                    <Button
+                        android:id="@+id/btnAddVehiculo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Añadir Vehículo"
+                        android:backgroundTint="@color/ambar"
+                        android:textColor="@color/azul_oscuro"
+                        app:cornerRadius="8dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -87,6 +257,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:padding="16dp"
             android:visibility="gone"
             tools:visibility="gone">
 
@@ -94,14 +265,19 @@
                 android:id="@+id/formTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                tools:text="Crear/Editar Perfil" />
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/azul_oscuro"
+                android:layout_marginBottom="16dp"
+                tools:text="Crear Perfil" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Nombre">
+                android:hint="Nombre"
+                app:boxBackgroundColor="@color/blanco"
+                app:hintTextColor="@color/ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nombreInput"
                     android:layout_width="match_parent"
@@ -112,7 +288,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Apellido Paterno">
+                android:hint="Apellido Paterno"
+                app:boxBackgroundColor="@color/blanco"
+                app:hintTextColor="@color/ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/apellidoPatInput"
                     android:layout_width="match_parent"
@@ -123,7 +301,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Apellido Materno">
+                android:hint="Apellido Materno"
+                app:boxBackgroundColor="@color/blanco"
+                app:hintTextColor="@color/ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/apellidoMatInput"
                     android:layout_width="match_parent"
@@ -134,7 +314,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Fecha Nacimiento (YYYY-MM-DD)">
+                android:hint="Fecha Nacimiento (YYYY-MM-DD)"
+                app:boxBackgroundColor="@color/blanco"
+                app:hintTextColor="@color/ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/fechaInput"
                     android:layout_width="match_parent"
@@ -145,7 +327,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:hint="Teléfono">
+                android:hint="Teléfono"
+                app:boxBackgroundColor="@color/blanco"
+                app:hintTextColor="@color/ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/telefonoInput"
                     android:layout_width="match_parent"
@@ -156,8 +340,11 @@
                 android:id="@+id/btnGuardar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Guardar" />
+                android:layout_marginTop="24dp"
+                android:text="Guardar"
+                android:backgroundTint="@color/azul_medio"
+                android:textColor="@color/blanco"
+                app:cornerRadius="8dp" />
         </LinearLayout>
 
     </LinearLayout>

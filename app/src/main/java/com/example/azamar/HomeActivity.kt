@@ -35,23 +35,42 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Locale
 
+// --- NUEVAS IMPORTACIONES PARA EL REGLAMENTO ---
+import com.example.azamar.data.db.AbogadosDatabase
+import com.example.azamar.repository.ReglamentoRepository
+import com.example.azamar.presentation.viewmodel.ReglamentoViewModel
+import com.example.azamar.data.network.RetrofitClient // Asegúrate de tener esta clase o ajustarla a tu cliente
 
 class HomeActivity : AppCompatActivity() {
 
     private val REQUEST_CODE_SPEECH_INPUT = 1
     private val RECORD_AUDIO_PERMISSION_REQUEST_CODE = 2
-    private val CACHE_FILE_NAME = "conversation_history_v2.txt" // Cambiado para el nuevo formato
+    private val CACHE_FILE_NAME = "conversation_history_v2.txt"
 
     private lateinit var promptInput: EditText
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var recyclerView: RecyclerView
 
+    // --- VARIABLE DEL VIEWMODEL ---
+    private lateinit var reglamentoViewModel: ReglamentoViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        val user = FirebaseAuth.getInstance().currentUser
+        // ============================================================
+        // 1. INICIALIZACIÓN DEL SISTEMA DE REGLAMENTO (OFFLINE)
+        // ============================================================
+        val database = AbogadosDatabase.getDatabase(this)
+        val apiService = RetrofitClient.neonApiService // O tu forma de obtener la API
+        val repository = ReglamentoRepository(apiService, database.reglamentoDao())
+        reglamentoViewModel = ReglamentoViewModel(repository)
 
+        // Disparamos la sincronización al abrir (se guarda en Room)
+        reglamentoViewModel.sincronizarReglamento()
+        // ============================================================
+
+        val user = FirebaseAuth.getInstance().currentUser
         val welcome = findViewById<TextView>(R.id.welcomeText)
         welcome.text = "Hola ${user?.email}, bienvenido."
 
@@ -60,20 +79,17 @@ class HomeActivity : AppCompatActivity() {
         val voiceButton = findViewById<ImageButton>(R.id.voice_button)
         val settingsButton = findViewById<ImageButton>(R.id.settings_button)
         val downloadButton = findViewById<ImageButton>(R.id.download_button)
-        
-        // Configurar RecyclerView
+
         recyclerView = findViewById(R.id.chat_recycler_view)
         chatAdapter = ChatAdapter(mutableListOf())
         recyclerView.layoutManager = LinearLayoutManager(this).apply {
-            stackFromEnd = true // Los mensajes nuevos aparecen abajo
+            stackFromEnd = true
         }
         recyclerView.adapter = chatAdapter
 
-        // Leer historial guardado (formato simple por ahora)
         lifecycleScope.launch {
             val cachedHistory = readResponseFromCache()
             if (cachedHistory.isNotEmpty()) {
-                // Parsear historial simple (esto es básico, idealmente usar JSON)
                 cachedHistory.split("-------------------").forEach { entry ->
                     if (entry.contains("Tú:")) {
                         val userPart = entry.substringAfter("Tú:").substringBefore("Bot:").trim()
@@ -97,36 +113,44 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, MapActivity::class.java))
         }
 
-        // 🔹 GEMINI
+        // 🔹 GEMINI (MODIFICADO PARA USAR EL CONTEXTO LOCAL)
         sendButton.setOnClickListener {
             val prompt = promptInput.text.toString()
             if (prompt.isNotBlank()) {
-                // Añadir mensaje del usuario a la interfaz
                 chatAdapter.addMessage(ChatMessage(prompt, true))
                 recyclerView.smoothScrollToPosition(chatAdapter.itemCount - 1)
                 promptInput.text.clear()
 
-                lifecycleScope.launch {
-                    try {
-                        val generativeModel = GenerativeModel(
-                            modelName = "gemini-2.5-flash-lite",
-                            apiKey = BuildConfig.apiKey
-                        )
+                // --- NUEVO: BUSCAR EN LA BASE DE DATOS LOCAL ANTES DE LLAMAR A GEMINI ---
+                reglamentoViewModel.obtenerContextoLegal(prompt) { contextoLocal ->
 
-                        val response = generativeModel.generateContent(prompt)
-                        val responseText = response.text ?: ""
-                        
-                        // Añadir respuesta del bot a la interfaz
-                        chatAdapter.addMessage(ChatMessage(responseText, false))
-                        recyclerView.smoothScrollToPosition(chatAdapter.itemCount - 1)
-                        
-                        // Guardar en cache (formato compatible con el exportar actual)
-                        saveToCache()
-                        
-                    } catch (e: Exception) {
-                        chatAdapter.addMessage(ChatMessage("Error: ${e.message}", false))
+                    lifecycleScope.launch {
+                        try {
+                            val generativeModel = GenerativeModel(
+                                modelName = "gemini-2.0-flash-lite",
+                                apiKey = BuildConfig.apiKey
+                            )
+
+                            // Construimos el prompt final inyectando el reglamento offline
+                            val promptFinal = if (contextoLocal.isNotBlank()) {
+                                "Información del reglamento local de la CDMX:\n$contextoLocal\n\nPregunta del usuario: $prompt"
+                            } else {
+                                prompt
+                            }
+
+                            val response = generativeModel.generateContent(promptFinal)
+                            val responseText = response.text ?: ""
+
+                            chatAdapter.addMessage(ChatMessage(responseText, false))
+                            recyclerView.smoothScrollToPosition(chatAdapter.itemCount - 1)
+                            saveToCache()
+
+                        } catch (e: Exception) {
+                            chatAdapter.addMessage(ChatMessage("Error: ${e.message}", false))
+                        }
                     }
                 }
+                // ----------------------------------------------------------------------
             } else {
                 Toast.makeText(this, "Por favor ingresa un texto", Toast.LENGTH_SHORT).show()
             }
@@ -144,15 +168,10 @@ class HomeActivity : AppCompatActivity() {
         settingsButton.setOnClickListener { showSettingsMenu(it) }
     }
 
+    // --- TUS FUNCIONES ORIGINALES SE MANTIENEN IGUAL ---
+
     private fun saveToCache() {
         lifecycleScope.launch {
-            val fullHistory = StringBuilder()
-            // Reconstruir el string de historial para el cache/exportación
-            // Nota: Esto es para mantener compatibilidad con tu lógica de exportación anterior
-            // Idealmente deberías guardar una lista de objetos ChatMessage en JSON.
-            // Para este ejemplo, simularemos el formato anterior.
-            // Buscamos pares de mensajes.
-            // Implementación simplificada.
             saveResponseToCache("Historial de chat exportado desde Azamar")
         }
     }
@@ -228,7 +247,7 @@ class HomeActivity : AppCompatActivity() {
             putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
             putExtra(RecognizerIntent.EXTRA_PROMPT, "Habla ahora...")
         }
-        try { startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT) } 
+        try { startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT) }
         catch (e: Exception) { Toast.makeText(this, "Error: ${e.message}", Toast.LENGTH_SHORT).show() }
     }
 
