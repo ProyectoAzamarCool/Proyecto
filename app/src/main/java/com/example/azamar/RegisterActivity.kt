@@ -2,62 +2,47 @@ package com.example.azamar
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.text.method.ScrollingMovementMethod
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.View
+import android.view.WindowManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.azamar.databinding.ActivityRegisterBinding // ¡Importante! Asegúrate de que este import se añada
+import com.example.azamar.databinding.ActivityRegisterBinding
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    // Se añade la variable para View Binding
     private lateinit var binding: ActivityRegisterBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Se infla el layout usando View Binding
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
-
-        // El botón de registro empieza deshabilitado (como lo definimos en el XML)
-        // binding.btnRegister.isEnabled = false // No es necesario si ya está en el XML, pero es buena práctica
-
         val prefs = getSharedPreferences("AzamarPrefs", Context.MODE_PRIVATE)
 
-        // --- LÓGICA PARA TÉRMINOS Y CONDICIONES ---
+        // Configurar el CheckBox con el texto subrayado y clicable
+        setupTermsText()
 
-        // 1. Habilitar/deshabilitar el botón de registro al marcar el CheckBox
-        binding.checkTerms.setOnCheckedChangeListener { _, isChecked ->
-            binding.btnRegister.isEnabled = isChecked
-        }
-
-        // 2. Mostrar/ocultar el texto de los TyC al hacer clic en el TextView
-        binding.tvDesplegarTyC.setOnClickListener {
-            if (binding.tvContenidoTyC.visibility == View.VISIBLE) {
-                binding.tvContenidoTyC.visibility = View.GONE
-            } else {
-                binding.tvContenidoTyC.visibility = View.VISIBLE
-            }
-        }
-
-        // 3. (Opcional) Hacer que el texto de los TyC sea "scrollable" por si es muy largo
-        binding.tvContenidoTyC.movementMethod = ScrollingMovementMethod.getInstance()
-
-        // 4. Se elimina el texto del CheckBox para que no se duplique con el TextView clicable
-        binding.checkTerms.text = ""
-
-
-        // --- LÓGICA DEL BOTÓN DE REGISTRO ---
+        // Lógica del botón de registro
         binding.btnRegister.setOnClickListener {
+            if (!binding.checkTerms.isChecked) {
+                Toast.makeText(this, "Debes aceptar los términos y condiciones", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             val email = binding.editEmail.text.toString().trim()
             val password = binding.editPassword.text.toString().trim()
 
-            // Verificaciones básicas
             if (email.isEmpty() || password.isEmpty()) {
                 Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -68,16 +53,63 @@ class RegisterActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         prefs.edit().putBoolean("termsAccepted", true).apply()
                         Toast.makeText(this, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
-                        startActivity(Intent(this, ProfileActivity::class.java))
-                        finish() // Cierra esta actividad para que el usuario no pueda volver atrás
+                        
+                        val intent = Intent(this, ProfileActivity::class.java)
+                        startActivity(intent)
+                        finish()
                     } else {
-                        // Muestra un error más específico si es posible
-                        val errorMessage = task.exception?.message ?: "Error desconocido al registrar"
+                        val errorMessage = task.exception?.message ?: "Error al registrar"
                         Toast.makeText(this, "Error: $errorMessage", Toast.LENGTH_LONG).show()
                     }
                 }
         }
     }
 
-}
+    private fun setupTermsText() {
+        val text = getString(R.string.terms_and_conditions)
+        val spannableString = SpannableString(text)
+        
+        // Creamos un span clicable para todo el texto del CheckBox
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                // Prevenimos que al hacer clic en el texto se cambie el estado del checkbox automáticamente
+                // si solo queremos abrir el modal
+                showTermsModal()
+            }
 
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = true // Subrayado
+                ds.color = Color.parseColor("#1F3B5C") // Color azul_medio
+            }
+        }
+
+        spannableString.setSpan(clickableSpan, 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        
+        binding.checkTerms.text = spannableString
+        binding.checkTerms.movementMethod = LinkMovementMethod.getInstance() // Necesario para que el clic funcione
+    }
+
+    private fun showTermsModal() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Términos y Condiciones")
+        builder.setMessage(getString(R.string.full_terms_and_conditions))
+        builder.setPositiveButton("He leído y acepto") { dialog, _ ->
+            binding.checkTerms.isChecked = true
+            dialog.dismiss()
+        }
+        builder.setNegativeButton("Cerrar") { dialog, _ ->
+            dialog.dismiss()
+        }
+        
+        val dialog = builder.create()
+        dialog.show()
+
+        // Redimensionar el modal para que sea un poco más pequeño (90% del ancho de la pantalla)
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window?.attributes)
+        layoutParams.width = (resources.displayMetrics.widthPixels * 0.9).toInt()
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        dialog.window?.attributes = layoutParams
+    }
+}
