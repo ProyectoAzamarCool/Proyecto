@@ -7,7 +7,6 @@
     android:background="@color/azul_oscuro"
     tools:context=".HomeActivity">
 
-    <!-- Top Bar / Header Area -->
     <View
         android:id="@+id/header_bg"
         android:layout_width="0dp"
@@ -66,20 +65,17 @@
 
     <ImageButton
         android:id="@+id/settings_button"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/configuracion"
-        android:padding="8dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/ic_menu_manage"
+        android:src="@drawable/ic_perfil_menu"
         app:layout_constraintBottom_toBottomOf="@id/header_bg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/header_bg"
-        app:tint="@color/white" />
+        app:layout_constraintTop_toTopOf="@id/header_bg" />
 
-    <!-- Conversation Area (Chat Bubbles Style) -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycler_view"
         android:layout_width="0dp"
@@ -93,7 +89,6 @@
         app:layout_constraintTop_toBottomOf="@id/header_bg"
         tools:listitem="@android:layout/simple_list_item_1" />
 
-    <!-- FAB Abogados -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_abogados"
         android:layout_width="wrap_content"
@@ -107,7 +102,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/black" />
 
-    <!-- Bottom Input Container -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/input_container"
         android:layout_width="0dp"
@@ -120,7 +114,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- Pill container for text and mic -->
         <LinearLayout
             android:id="@+id/pill_input_group"
             android:layout_width="0dp"

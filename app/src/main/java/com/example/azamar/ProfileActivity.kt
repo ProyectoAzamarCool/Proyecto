@@ -12,7 +12,6 @@ import android.view.Gravity
 import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -20,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.annotations.SerializedName
@@ -88,7 +88,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var telefonoText: TextView
     private lateinit var btnEditar: Button
     private lateinit var btnAddVehiculo: Button
-    private lateinit var profileImage: ImageView
+    private lateinit var profileImage: ShapeableImageView // CAMBIADO: ShapeableImageView
     private lateinit var btnEditPhoto: ImageButton
 
     // Vistas del formulario de perfil
@@ -100,13 +100,25 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var btnGuardar: Button
     private lateinit var formTitle: TextView
 
-    // Launcher para seleccionar imagen
+    // Launcher para seleccionar imagen de galería
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
                 saveProfileImageLocally(uri)
+            }
+        }
+    }
+
+    // Launcher para cámara
+    private val cameraCaptureResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val imageBitmap = result.data?.extras?.get("data") as? Bitmap
+            imageBitmap?.let {
+                saveProfileImageFromBitmap(it)
             }
         }
     }
@@ -175,24 +187,13 @@ class ProfileActivity : AppCompatActivity() {
         cameraCaptureResult.launch(intent)
     }
 
-    private val cameraCaptureResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val imageBitmap = result.data?.extras?.get("data") as? Bitmap
-            imageBitmap?.let {
-                saveProfileImageFromBitmap(it)
-            }
-        }
-    }
-
     private fun saveProfileImageLocally(uri: Uri) {
         try {
             val inputStream = contentResolver.openInputStream(uri)
             val bitmap = BitmapFactory.decodeStream(inputStream)
             inputStream?.close()
 
-            saveProfileImageFromBitmap(bitmap)
+            bitmap?.let { saveProfileImageFromBitmap(it) }
         } catch (e: Exception) {
             Log.e("ProfileActivity", "Error al guardar imagen", e)
             Toast.makeText(this, "Error al guardar la imagen", Toast.LENGTH_SHORT).show()
@@ -204,14 +205,15 @@ class ProfileActivity : AppCompatActivity() {
             val file = File(filesDir, "profile_image.jpg")
             val outputStream = FileOutputStream(file)
 
-            // Comprimir y redimensionar la imagen
-            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 500, 500, true)
-            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream)
+            // CORRECCIÓN: No usamos createScaledBitmap con tamaños fijos para evitar el aplastamiento.
+            // Guardamos el original con compresión para ahorrar espacio.
+            // El XML con scaleType="centerCrop" se encargará de que luzca bien.
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
 
             outputStream.flush()
             outputStream.close()
 
-            profileImage.setImageBitmap(scaledBitmap)
+            profileImage.setImageBitmap(bitmap)
             Toast.makeText(this, "Foto actualizada", Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Log.e("ProfileActivity", "Error al guardar imagen", e)

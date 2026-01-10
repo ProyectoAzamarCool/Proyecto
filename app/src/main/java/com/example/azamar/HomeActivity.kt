@@ -5,12 +5,16 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
+import android.graphics.Outline
 import android.net.Uri
 import android.os.Bundle
 import android.speech.RecognizerIntent
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView // IMPORTANTE: Para ScaleType
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
@@ -35,11 +39,11 @@ import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.util.Locale
 
-// --- NUEVAS IMPORTACIONES PARA EL REGLAMENTO ---
+// --- IMPORTACIONES REGLAMENTO ---
 import com.example.azamar.data.db.AbogadosDatabase
 import com.example.azamar.repository.ReglamentoRepository
 import com.example.azamar.presentation.viewmodel.ReglamentoViewModel
-import com.example.azamar.data.network.RetrofitClient // Asegúrate de tener esta clase o ajustarla a tu cliente
+import com.example.azamar.data.network.RetrofitClient
 
 class HomeActivity : AppCompatActivity() {
 
@@ -50,26 +54,25 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var promptInput: EditText
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var settingsButton: ImageButton // Para la foto de perfil
 
-    // --- VARIABLE DEL VIEWMODEL ---
+    // --- VIEWMODEL REGLAMENTO ---
     private lateinit var reglamentoViewModel: ReglamentoViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        // ============================================================
-        // 1. INICIALIZACIÓN DEL SISTEMA DE REGLAMENTO (OFFLINE)
-        // ============================================================
+        // 1. INICIALIZACIÓN REGLAMENTO (OFFLINE)
         val database = AbogadosDatabase.getDatabase(this)
-        val apiService = RetrofitClient.neonApiService // O tu forma de obtener la API
+        val apiService = RetrofitClient.neonApiService
         val repository = ReglamentoRepository(apiService, database.reglamentoDao())
         reglamentoViewModel = ReglamentoViewModel(repository)
 
-        // Disparamos la sincronización al abrir (se guarda en Room)
+        // Sincronizar datos de Neon a Room
         reglamentoViewModel.sincronizarReglamento()
-        // ============================================================
 
+        // 2. CONFIGURACIÓN DE VISTAS
         val user = FirebaseAuth.getInstance().currentUser
         val welcome = findViewById<TextView>(R.id.welcomeText)
         welcome.text = "Hola ${user?.email}, bienvenido."
@@ -77,9 +80,13 @@ class HomeActivity : AppCompatActivity() {
         promptInput = findViewById(R.id.prompt_input)
         val sendButton = findViewById<View>(R.id.send_button)
         val voiceButton = findViewById<ImageButton>(R.id.voice_button)
-        val settingsButton = findViewById<ImageButton>(R.id.settings_button)
+        settingsButton = findViewById(R.id.settings_button)
         val downloadButton = findViewById<ImageButton>(R.id.download_button)
 
+        // 3. CARGAR FOTO DE PERFIL (Si existe)
+        actualizarIconoPerfil()
+
+        // 4. CONFIGURAR CHAT RECYCLERVIEW
         recyclerView = findViewById(R.id.chat_recycler_view)
         chatAdapter = ChatAdapter(mutableListOf())
         recyclerView.layoutManager = LinearLayoutManager(this).apply {
@@ -87,6 +94,7 @@ class HomeActivity : AppCompatActivity() {
         }
         recyclerView.adapter = chatAdapter
 
+        // Leer historial de caché
         lifecycleScope.launch {
             val cachedHistory = readResponseFromCache()
             if (cachedHistory.isNotEmpty()) {
@@ -102,6 +110,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        // 5. BOTONES DE NAVEGACIÓN
         val fabAbogados = findViewById<FloatingActionButton>(R.id.fab_abogados)
         fabAbogados.setOnClickListener {
             val bottomSheet = AyudaExternaFragment()
@@ -113,7 +122,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, MapActivity::class.java))
         }
 
-        // 🔹 GEMINI (MODIFICADO PARA USAR EL CONTEXTO LOCAL)
+        // 6. LÓGICA DE ENVÍO GEMINI + CONTEXTO LOCAL
         sendButton.setOnClickListener {
             val prompt = promptInput.text.toString()
             if (prompt.isNotBlank()) {
@@ -121,9 +130,8 @@ class HomeActivity : AppCompatActivity() {
                 recyclerView.smoothScrollToPosition(chatAdapter.itemCount - 1)
                 promptInput.text.clear()
 
-                // --- NUEVO: BUSCAR EN LA BASE DE DATOS LOCAL ANTES DE LLAMAR A GEMINI ---
+                // Búsqueda en Room antes de llamar a la IA
                 reglamentoViewModel.obtenerContextoLegal(prompt) { contextoLocal ->
-
                     lifecycleScope.launch {
                         try {
                             val generativeModel = GenerativeModel(
@@ -131,7 +139,6 @@ class HomeActivity : AppCompatActivity() {
                                 apiKey = BuildConfig.apiKey
                             )
 
-                            // Construimos el prompt final inyectando el reglamento offline
                             val promptFinal = if (contextoLocal.isNotBlank()) {
                                 "Información del reglamento local de la CDMX:\n$contextoLocal\n\nPregunta del usuario: $prompt"
                             } else {
@@ -150,7 +157,6 @@ class HomeActivity : AppCompatActivity() {
                         }
                     }
                 }
-                // ----------------------------------------------------------------------
             } else {
                 Toast.makeText(this, "Por favor ingresa un texto", Toast.LENGTH_SHORT).show()
             }
@@ -168,7 +174,47 @@ class HomeActivity : AppCompatActivity() {
         settingsButton.setOnClickListener { showSettingsMenu(it) }
     }
 
-    // --- TUS FUNCIONES ORIGINALES SE MANTIENEN IGUAL ---
+    // --- REFRESCAR FOTO AL VOLVER DE PROFILEACTIVITY ---
+    override fun onResume() {
+        super.onResume()
+        actualizarIconoPerfil()
+    }
+
+    private fun actualizarIconoPerfil() {
+        try {
+            val file = File(filesDir, "profile_image.jpg")
+            if (file.exists()) {
+                val bitmap = BitmapFactory.decodeFile(file.absolutePath)
+                settingsButton.setImageBitmap(bitmap)
+
+                // QUITAR el tinte para que la foto se vea normal
+                settingsButton.imageTintList = null
+
+                settingsButton.scaleType = ImageView.ScaleType.CENTER_CROP
+
+                settingsButton.clipToOutline = true
+                settingsButton.outlineProvider = object : ViewOutlineProvider() {
+                    override fun getOutline(view: View, outline: Outline) {
+                        outline.setOval(0, 0, view.width, view.height)
+                    }
+                }
+            } else {
+                // CAMBIO: No uses el del sistema (ic_menu_manage)
+                // Usa el que tienes en drawable que se ve como una persona
+                settingsButton.setImageResource(R.drawable.ic_perfil_menu)
+
+                // IMPORTANTE: Ponle el tinte blanco solo al icono de respaldo
+                settingsButton.imageTintList = android.content.res.ColorStateList.valueOf(
+                    ContextCompat.getColor(this, R.color.white)
+                )
+                settingsButton.clipToOutline = false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // --- FUNCIONES DE SOPORTE (CACHE, MENÚ, VOZ, ETC) ---
 
     private fun saveToCache() {
         lifecycleScope.launch {
