@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gris_fondo"
+    android:background="@color/fondo_principal"
     tools:context=".ProfileActivity">
 
     <LinearLayout
@@ -48,7 +48,7 @@
                     android:layout_marginBottom="-8dp"
                     android:background="@drawable/edit_photo_button_background"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="@color/azul_oscuro"
+                    app:tint="@color/texto_principal"
                     android:contentDescription="Editar foto"
                     android:padding="8dp" />
 
@@ -60,7 +60,7 @@
                 android:layout_margin="16dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
-                android:backgroundTint="@color/blanco">
+                android:backgroundTint="@color/superficie_card">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                         android:text="Información Personal"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/azul_oscuro"
+                        android:textColor="@color/texto_principal"
                         android:layout_marginBottom="16dp" />
 
                     <LinearLayout
@@ -87,7 +87,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_menu_myplaces"
-                            app:tint="@color/ambar"
+                            app:tint="@color/acento_ambar"
                             android:layout_marginEnd="12dp"
                             android:contentDescription="Icono nombre" />
 
@@ -102,14 +102,14 @@
                                 android:layout_height="wrap_content"
                                 android:text="Nombre Completo"
                                 android:textSize="12sp"
-                                android:textColor="@color/gris_texto_hint" />
+                                android:textColor="@color/texto_secundario" />
 
                             <TextView
                                 android:id="@+id/nombreText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
-                                android:textColor="@color/azul_oscuro"
+                                android:textColor="@color/texto_principal"
                                 android:textStyle="bold"
                                 tools:text="Juan Pérez González" />
                         </LinearLayout>
@@ -125,7 +125,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/ic_menu_today"
-                            app:tint="@color/ambar"
+                            app:tint="@color/acento_ambar"
                             android:layout_marginEnd="12dp"
                             android:contentDescription="Icono fecha" />
 
@@ -140,14 +140,14 @@
                                 android:layout_height="wrap_content"
                                 android:text="Fecha de Nacimiento"
                                 android:textSize="12sp"
-                                android:textColor="@color/gris_texto_hint" />
+                                android:textColor="@color/texto_secundario" />
 
                             <TextView
                                 android:id="@+id/fechaText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
-                                android:textColor="@color/azul_oscuro"
+                                android:textColor="@color/texto_principal"
                                 tools:text="1990-01-15" />
                         </LinearLayout>
                     </LinearLayout>
@@ -162,7 +162,7 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@android:drawable/stat_sys_phone_call"
-                            app:tint="@color/ambar"
+                            app:tint="@color/acento_ambar"
                             android:layout_marginEnd="12dp"
                             android:contentDescription="Icono teléfono" />
 
@@ -177,14 +177,14 @@
                                 android:layout_height="wrap_content"
                                 android:text="Teléfono"
                                 android:textSize="12sp"
-                                android:textColor="@color/gris_texto_hint" />
+                                android:textColor="@color/texto_secundario" />
 
                             <TextView
                                 android:id="@+id/telefonoText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="16sp"
-                                android:textColor="@color/azul_oscuro"
+                                android:textColor="@color/texto_principal"
                                 tools:text="555-1234-5678" />
                         </LinearLayout>
                     </LinearLayout>
@@ -194,8 +194,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Editar Perfil"
-                        android:backgroundTint="@color/azul_medio"
-                        android:textColor="@color/blanco"
+                        android:backgroundTint="@color/boton_principal"
+                        android:textColor="@color/texto_on_dark"
                         app:cornerRadius="8dp" />
 
                 </LinearLayout>
@@ -209,7 +209,7 @@
                 android:layout_marginBottom="16dp"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp"
-                android:backgroundTint="@color/blanco">
+                android:backgroundTint="@color/superficie_card">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -223,7 +223,7 @@
                         android:text="Mis Vehículos"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/azul_oscuro"
+                        android:textColor="@color/texto_principal"
                         android:layout_marginBottom="16dp" />
 
                     <LinearLayout
@@ -238,8 +238,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Añadir Vehículo"
-                        android:backgroundTint="@color/ambar"
-                        android:textColor="@color/azul_oscuro"
+                        android:backgroundTint="@color/acento_ambar"
+                        android:textColor="@color/texto_principal"
                         app:cornerRadius="8dp" />
 
                 </LinearLayout>
@@ -262,7 +262,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/azul_oscuro"
+                android:textColor="@color/texto_principal"
                 android:layout_marginBottom="16dp"
                 tools:text="Crear Perfil" />
 
@@ -271,12 +271,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Nombre"
-                app:boxBackgroundColor="@color/blanco"
-                app:hintTextColor="@color/ambar">
+                app:boxBackgroundColor="@color/superficie_card"
+                app:hintTextColor="@color/acento_ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/nombreInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/texto_principal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -284,12 +285,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Apellido Paterno"
-                app:boxBackgroundColor="@color/blanco"
-                app:hintTextColor="@color/ambar">
+                app:boxBackgroundColor="@color/superficie_card"
+                app:hintTextColor="@color/acento_ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/apellidoPatInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/texto_principal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -297,12 +299,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Apellido Materno"
-                app:boxBackgroundColor="@color/blanco"
-                app:hintTextColor="@color/ambar">
+                app:boxBackgroundColor="@color/superficie_card"
+                app:hintTextColor="@color/acento_ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/apellidoMatInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/texto_principal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -310,12 +313,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Fecha Nacimiento (YYYY-MM-DD)"
-                app:boxBackgroundColor="@color/blanco"
-                app:hintTextColor="@color/ambar">
+                app:boxBackgroundColor="@color/superficie_card"
+                app:hintTextColor="@color/acento_ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/fechaInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/texto_principal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -323,12 +327,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:hint="Teléfono"
-                app:boxBackgroundColor="@color/blanco"
-                app:hintTextColor="@color/ambar">
+                app:boxBackgroundColor="@color/superficie_card"
+                app:hintTextColor="@color/acento_ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/telefonoInput"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/texto_principal" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button
@@ -337,8 +342,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="Guardar"
-                android:backgroundTint="@color/azul_medio"
-                android:textColor="@color/blanco"
+                android:backgroundTint="@color/boton_principal"
+                android:textColor="@color/texto_on_dark"
                 app:cornerRadius="8dp" />
         </LinearLayout>
 

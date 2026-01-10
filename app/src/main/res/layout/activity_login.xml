@@ -1,87 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gris_fondo">
+    android:background="@color/fondo_principal"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="30dp">
+        android:padding="30dp"
+        android:gravity="center_horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ASISTENTE LEGAL AUTOMOTRIZ"
-            android:textSize="24sp"
+            android:text="Sin SorJuanas"
+            android:textSize="28sp"
             android:textStyle="bold"
-            android:textColor="@color/azul_oscuro"
-            android:layout_marginBottom="20dp" />
+            android:textColor="@color/texto_principal"
+            android:layout_marginBottom="30dp"
+            android:layout_gravity="start" />
 
         <EditText
             android:id="@+id/editEmail"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:hint="Correo electrónico"
             android:background="@drawable/rounded_input"
             android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="12dp"
-            android:textColor="@color/azul_oscuro"
-            android:textColorHint="@color/gris_texto_hint" />
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario" />
 
         <EditText
             android:id="@+id/editPassword"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="52dp"
             android:hint="Contraseña"
             android:inputType="textPassword"
             android:layout_marginTop="15dp"
             android:background="@drawable/rounded_input"
             android:maxLines="1"
             android:padding="12dp"
-            android:textColor="@color/azul_oscuro"
-            android:textColorHint="@color/gris_texto_hint" />
+            android:textColor="@color/texto_principal"
+            android:textColorHint="@color/texto_secundario" />
 
-        <!-- BOTÓN OLVIDÓ CONTRASEÑA -->
         <TextView
             android:id="@+id/btnForgot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="¿Olvidaste tu contraseña?"
-            android:textColor="@color/azul_oscuro"
-            android:layout_marginTop="15dp" />
+            android:textColor="@color/icono_activo"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="start"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btnLogin"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:text="Iniciar sesión"
-            android:layout_marginTop="25dp"
-            android:backgroundTint="@color/azul_medio"
-            android:textColor="@color/blanco" />
+            android:layout_marginTop="30dp"
+            android:backgroundTint="@color/boton_principal"
+            android:textColor="@color/texto_on_dark"
+            android:textStyle="bold"
+            app:cornerRadius="12dp" />
 
         <Button
             android:id="@+id/btnGoRegister"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:text="Crear cuenta"
             android:layout_marginTop="15dp"
-            android:backgroundTint="@color/ambar"
-            android:textColor="@color/azul_oscuro" />
+            android:backgroundTint="@color/acento_ambar"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            app:cornerRadius="12dp" />
 
-
-        <!-- BOTÓN GOOGLE -->
-        <Button
-            android:id="@+id/btnGoogleLogin"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Iniciar con Google"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="40dp">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/texto_desactivado" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" o inicia con "
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="@color/texto_desactivado" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoogleLogin"
+            style="@style/Widget.Material3.Button.ElevatedButton"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
             android:layout_marginTop="20dp"
-            android:backgroundTint="@color/rojo_google"
-            android:textColor="@color/blanco" />
+            android:padding="0dp"
+            app:backgroundTint="@color/superficie_card"
+            app:cornerRadius="32dp"
+            app:icon="@drawable/ic_google"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="32dp"
+            app:iconTint="@null"
+            app:strokeColor="@color/texto_desactivado"
+            app:strokeWidth="1dp"
+            app:elevation="4dp" />
 
     </LinearLayout>
-
 </ScrollView>

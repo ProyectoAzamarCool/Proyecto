@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Tema principal usando Material 3 -->
     <style name="Theme.Azamar" parent="Theme.Material3.DayNight.NoActionBar">
 
-        <!-- Colores personalizados -->
-        <item name="colorPrimary">@color/azul_oscuro</item>
-        <item name="colorOnPrimary">@color/blanco</item>
+        <item name="colorPrimary">@color/header_barra</item>
+        <item name="colorOnPrimary">@color/texto_on_dark</item>
 
-        <item name="colorSecondary">@color/ambar</item>
-        <item name="colorOnSecondary">@color/blanco</item>
+        <item name="colorSecondary">@color/acento_ambar</item>
+        <item name="colorOnSecondary">#000000</item>
 
-        <!-- Fondo -->
-        <item name="android:windowBackground">@color/gris_fondo</item>
+        <item name="android:windowBackground">@color/fondo_principal</item>
 
-        <!-- Barra de estado -->
-        <item name="android:statusBarColor">@color/azul_oscuro</item>
-        <item name="android:navigationBarColor">@color/azul_oscuro</item>
+        <item name="android:statusBarColor">@color/header_barra</item>
+        <item name="android:navigationBarColor">@color/fondo_principal</item>
+
+        <item name="android:windowLightStatusBar">false</item>
 
     </style>
 
     <style name="CircleImage">
         <item name="cornerSize">50%</item>
     </style>
+
 </resources>

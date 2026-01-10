@@ -6,7 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    android:backgroundTint="@color/superficie_card">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +27,8 @@
                 android:layout_height="56dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_person"
-                android:layout_marginEnd="16dp" />
+                android:layout_marginEnd="16dp"
+                app:tint="@color/texto_secundario" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -39,7 +41,8 @@
                     android:layout_height="wrap_content"
                     android:text="Nombre del Abogado"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/texto_principal" />
 
                 <TextView
                     android:id="@+id/text_especialidad"
@@ -47,7 +50,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Especialidad: Civil/Penal"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@color/texto_secundario" />
 
                 <TextView
                     android:id="@+id/text_correo"
@@ -55,7 +59,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="correo@abogado.com"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:textColor="@color/texto_secundario" />
 
             </LinearLayout>
         </LinearLayout>
@@ -63,7 +68,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/colorSecondary"
+            android:background="@color/acento_ambar"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"/>
 
@@ -72,7 +77,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Contactar Ahora"
-            app:icon="@drawable/ic_call" />
+            app:icon="@drawable/ic_call"
+            android:backgroundTint="@color/boton_principal"
+            android:textColor="@color/texto_on_dark"
+            app:iconTint="@color/texto_on_dark" />
 
         <TextView
             android:id="@+id/text_distancia"
@@ -81,7 +89,7 @@
             android:layout_marginTop="4dp"
             android:text="Distancia: N/A"
             android:textSize="14sp"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/indicador_ubicacion" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

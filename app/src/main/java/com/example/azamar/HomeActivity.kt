@@ -76,6 +76,8 @@ class HomeActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
         val welcome = findViewById<TextView>(R.id.welcomeText)
         welcome.text = "Hola ${user?.email}, bienvenido."
+        // CAMBIO: Color de texto de bienvenida
+        welcome.setTextColor(getColor(R.color.texto_on_dark))
 
         promptInput = findViewById(R.id.prompt_input)
         val sendButton = findViewById<View>(R.id.send_button)
@@ -199,13 +201,11 @@ class HomeActivity : AppCompatActivity() {
                     }
                 }
             } else {
-                // CAMBIO: No uses el del sistema (ic_menu_manage)
-                // Usa el que tienes en drawable que se ve como una persona
                 settingsButton.setImageResource(R.drawable.ic_perfil_menu)
 
-                // IMPORTANTE: Ponle el tinte blanco solo al icono de respaldo
+                // CAMBIO: Tinte para el icono de respaldo (blanco sobre fondo oscuro)
                 settingsButton.imageTintList = android.content.res.ColorStateList.valueOf(
-                    ContextCompat.getColor(this, R.color.white)
+                    ContextCompat.getColor(this, R.color.texto_on_dark)
                 )
                 settingsButton.clipToOutline = false
             }

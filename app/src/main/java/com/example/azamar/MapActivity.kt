@@ -18,6 +18,8 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+// IMPORTANTE: Añade esta importación
+import android.content.res.Configuration
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -51,6 +53,18 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        // --- INICIO AGREGADO PARA COLOR ---
+        val nightModeFlags = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
+            try {
+                // Esto busca un archivo llamado map_style_dark.json en res/raw
+                googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style_dark))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+        // --- FIN AGREGADO PARA COLOR ---
 
         if (ActivityCompat.checkSelfPermission(
                 this,

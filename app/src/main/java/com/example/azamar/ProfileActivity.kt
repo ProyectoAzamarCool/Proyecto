@@ -88,7 +88,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var telefonoText: TextView
     private lateinit var btnEditar: Button
     private lateinit var btnAddVehiculo: Button
-    private lateinit var profileImage: ShapeableImageView // CAMBIADO: ShapeableImageView
+    private lateinit var profileImage: ShapeableImageView
     private lateinit var btnEditPhoto: ImageButton
 
     // Vistas del formulario de perfil
@@ -205,9 +205,6 @@ class ProfileActivity : AppCompatActivity() {
             val file = File(filesDir, "profile_image.jpg")
             val outputStream = FileOutputStream(file)
 
-            // CORRECCIÓN: No usamos createScaledBitmap con tamaños fijos para evitar el aplastamiento.
-            // Guardamos el original con compresión para ahorrar espacio.
-            // El XML con scaleType="centerCrop" se encargará de que luzca bien.
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
 
             outputStream.flush()
@@ -292,7 +289,8 @@ class ProfileActivity : AppCompatActivity() {
             val noVehiclesText = TextView(this).apply {
                 text = "No tienes vehículos registrados."
                 gravity = Gravity.CENTER
-                setTextColor(getColor(R.color.gris_texto_hint))
+                // ACTUALIZADO: Color secundario
+                setTextColor(getColor(R.color.texto_secundario))
                 setPadding(0, 16, 0, 16)
             }
             vehiclesContainer.addView(noVehiclesText)
@@ -327,20 +325,23 @@ class ProfileActivity : AppCompatActivity() {
         val infoText = TextView(this).apply {
             text = "${vehicle.modelo} - ${vehicle.placa}"
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f)
-            setTextColor(getColor(R.color.azul_oscuro))
+            // ACTUALIZADO: Texto principal
+            setTextColor(getColor(R.color.texto_principal))
             textSize = 16f
         }
 
         val tipoText = TextView(this).apply {
             text = vehicle.tipo
-            setTextColor(getColor(R.color.gris_texto_hint))
+            // ACTUALIZADO: Texto secundario
+            setTextColor(getColor(R.color.texto_secundario))
             textSize = 12f
         }
 
         val deleteButton = Button(this).apply {
             text = "Eliminar"
             setBackgroundColor(getColor(R.color.rojo_google))
-            setTextColor(getColor(R.color.blanco))
+            // ACTUALIZADO: Texto sobre botón oscuro
+            setTextColor(getColor(R.color.texto_on_dark))
             setOnClickListener { showDeleteConfirmationDialog(vehicle) }
         }
 

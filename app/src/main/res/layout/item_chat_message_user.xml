@@ -10,8 +10,8 @@
         android:id="@+id/message_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/azul_medio"
-        android:textColor="@color/blanco"
+        android:background="@color/boton_principal"
+        android:textColor="@color/texto_on_dark"
         android:padding="12dp"
         android:text="User message" />
 

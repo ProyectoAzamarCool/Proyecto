@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/azul_oscuro"
+    android:background="@color/fondo_principal"
     tools:context=".HomeActivity">
 
     <View
         android:id="@+id/header_bg"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:background="@color/azul_medio"
+        android:background="@color/header_barra"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +24,7 @@
         android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textColor="@color/white"
+        android:textColor="@color/texto_on_dark"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/header_bg"
@@ -46,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="@id/header_bg"
         app:layout_constraintEnd_toStartOf="@id/download_button"
         app:layout_constraintTop_toTopOf="@id/header_bg"
-        app:tint="@color/white" />
+        app:tint="@color/texto_on_dark" />
 
     <ImageButton
         android:id="@+id/download_button"
@@ -61,7 +61,7 @@
         app:layout_constraintBottom_toBottomOf="@id/header_bg"
         app:layout_constraintEnd_toStartOf="@id/settings_button"
         app:layout_constraintTop_toTopOf="@id/header_bg"
-        app:tint="@color/white" />
+        app:tint="@color/texto_on_dark" />
 
     <ImageButton
         android:id="@+id/settings_button"
@@ -69,12 +69,13 @@
         android:layout_height="45dp"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/configuracion"
+        android:contentDescription="Configuración"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_perfil_menu"
         app:layout_constraintBottom_toBottomOf="@id/header_bg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/header_bg" />
+        app:layout_constraintTop_toTopOf="@id/header_bg"
+        app:tint="@color/texto_on_dark" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_recycler_view"
@@ -97,10 +98,10 @@
         android:layout_marginBottom="16dp"
         android:contentDescription="Ayuda Externa"
         android:src="@drawable/ic_warning"
-        app:backgroundTint="@color/ambar"
+        app:backgroundTint="@color/acento_ambar"
         app:layout_constraintBottom_toTopOf="@+id/input_container"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/black" />
+        app:tint="#000000" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/input_container"
@@ -134,23 +135,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
-                android:hint="@string/escribe_tu_texto_aqu"
+                android:hint="Escribe tu texto aquí"
                 android:importantForAutofill="no"
                 android:inputType="textMultiLine"
                 android:maxLines="4"
                 android:minHeight="48dp"
                 android:padding="12dp"
-                android:textColor="@color/azul_oscuro"
-                android:textColorHint="#757575" />
+                android:textColor="@color/texto_principal"
+                android:textColorHint="@color/texto_secundario" />
 
             <ImageButton
                 android:id="@+id/voice_button"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/entrada_por_voz"
+                android:contentDescription="Entrada por voz"
                 android:src="@android:drawable/ic_btn_speak_now"
-                app:tint="@color/azul_medio" />
+                app:tint="@color/icono_activo" />
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
@@ -161,10 +162,10 @@
             android:minWidth="0dp"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:text="@string/enviar"
+            android:text="Enviar"
             android:textAllCaps="false"
-            android:textColor="@color/black"
-            app:backgroundTint="@color/ambar"
+            android:textColor="#000000"
+            app:backgroundTint="@color/acento_ambar"
             app:cornerRadius="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

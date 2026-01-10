@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
+    android:background="@color/fondo_principal"
     tools:context=".presentation.ui.ayudaexterna.AyudaExternaFragment">
 
     <TextView
@@ -15,6 +16,7 @@
         android:text="Abogados de Ayuda Externa"
         android:textSize="24sp"
         android:textStyle="bold"
+        android:textColor="@color/texto_principal"
         app:layout_constraintBottom_toTopOf="@+id/recycler_abogados"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

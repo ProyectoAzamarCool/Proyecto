@@ -5,15 +5,25 @@
     <color name="ambar">#FFB800</color>
     <color name="gris_fondo">#F2F2F2</color>
     <color name="blanco">#FFFFFF</color>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
     <color name="rojo_google">#DB4437</color>
 
-    <!-- Color añadido para mejorar contraste de hints -->
-    <color name="gris_texto_hint">#757575</color>
+    <color name="fondo_principal">@color/gris_fondo</color>
+    <color name="header_barra">@color/azul_medio</color>
+    <color name="superficie_card">@color/blanco</color>
+    <color name="fondo_gradient">@color/azul_oscuro</color>
+
+    <color name="boton_principal">@color/azul_medio</color>
+    <color name="icono_activo">@color/azul_medio</color>
+    <color name="acento_ambar">@color/ambar</color>
+    <color name="acento_alerta">#FFB703</color>
+    <color name="acento_peligro">#F4A900</color>
+
+    <color name="estado_ok">#2E8B6F</color>
+
+    <color name="texto_principal">#212121</color> <color name="texto_secundario">#757575</color>
+    <color name="texto_desactivado">#9E9E9E</color>
+    <color name="texto_on_dark">#FFFFFF</color>
+
+    <color name="indicador_ubicacion">#212121</color>
+
 </resources>

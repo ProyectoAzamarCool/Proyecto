@@ -3,12 +3,7 @@ package com.example.azamar
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Switch
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.annotations.SerializedName
@@ -21,17 +16,17 @@ import retrofit2.http.POST
 
 // --- Data Classes ---
 
-// Para crear un vehículo (POST)
 data class Vehiculo(
     @SerializedName("modelo") val modelo: String,
     @SerializedName("vin") val vin: String,
     @SerializedName("placa") val placa: String,
     @SerializedName("propio") val propio: Boolean,
     @SerializedName("fk_tipodevehiculo") val fkTipoDeVehiculo: Int,
-    @SerializedName("fk_servicio") val fkServicio: Int
+    @SerializedName("fk_servicio") val fkServicio: Int,
+    // Agregamos fecha si tu API la recibe, o la manejamos como String
+    @SerializedName("fecha_registro") val fecha: String
 )
 
-// Para comprobar si existe un vehículo (GET)
 data class VehiculoExistente(
     @SerializedName("id_vehiculo") val id: Int
 )
@@ -50,21 +45,17 @@ data class Servicio(
     override fun toString(): String = nombre
 }
 
-// --- API Service (extendida) ---
+// --- API Service ---
 interface VehiculoApiService {
-    // Lee la lista de vehículos del usuario
     @GET("info-usuario/vehiculo")
     suspend fun getVehiculos(@Header("Authorization") token: String): Response<List<VehiculoExistente>>
 
-    // Crea un nuevo vehículo
     @POST("info-usuario/vehiculo")
     suspend fun createVehiculo(@Header("Authorization") token: String, @Body vehiculo: Vehiculo): Response<Unit>
 
-    // Obtiene los tipos de vehículo para el spinner
     @GET("info-usuario/tipos-vehiculo")
     suspend fun getTiposVehiculo(@Header("Authorization") token: String): Response<List<TipoVehiculo>>
 
-    // Obtiene los servicios para el spinner
     @GET("info-usuario/servicios")
     suspend fun getServicios(@Header("Authorization") token: String): Response<List<Servicio>>
 }
@@ -75,10 +66,10 @@ class VehiculoActivity : AppCompatActivity() {
     private lateinit var apiService: VehiculoApiService
     private lateinit var token: String
 
-    // Las vistas se inicializan solo si es necesario
     private lateinit var editModelo: EditText
     private lateinit var editVin: EditText
     private lateinit var editPlaca: EditText
+    private lateinit var editFechaVehiculo: EditText // Añadido para coincidir con el XML
     private lateinit var switchVehiculoPropio: Switch
     private lateinit var spinnerTipoVehiculo: Spinner
     private lateinit var spinnerServicio: Spinner
@@ -97,11 +88,8 @@ class VehiculoActivity : AppCompatActivity() {
         val forceShowForm = intent.getBooleanExtra("FORCE_SHOW_FORM", false)
 
         if (forceShowForm) {
-            // Si se nos obliga a mostrar el formulario (viniendo de "Añadir vehículo"), saltamos la comprobación.
-            Log.d("VehiculoActivity", "Forzando la muestra del formulario de creación.")
             setupForm()
         } else {
-            // Comportamiento normal: comprobar si el usuario ya tiene vehículos.
             checkExistingVehicles()
         }
     }
@@ -109,75 +97,55 @@ class VehiculoActivity : AppCompatActivity() {
     private fun checkExistingVehicles() {
         lifecycleScope.launch {
             try {
-                Log.d("VehiculoActivity", "Verificando vehículos existentes...")
                 val response = apiService.getVehiculos(token)
-
                 if (response.isSuccessful && response.body()?.isNotEmpty() == true) {
-                    // Si la lista NO está vacía, el usuario tiene vehículos. Ir a Home.
-                    Log.d("VehiculoActivity", "Vehículo(s) encontrado(s). Navegando a HomeActivity.")
-                    startActivity(Intent(this@VehiculoActivity, HomeActivity::class.java))
-                    finish() // Cierra esta actividad para que el usuario no pueda volver.
+                    navegarAHome()
                 } else {
-                    // Si la lista está vacía, mostrar el formulario para añadir uno.
-                    Log.d("VehiculoActivity", "No se encontraron vehículos. Mostrando formulario de creación.")
                     setupForm()
                 }
             } catch (e: Exception) {
-                // En caso de error de red, mostrar el formulario como fallback.
-                Log.e("VehiculoActivity", "Error de red al verificar vehículos", e)
-                showError("No se pudo verificar tus vehículos.")
-                setupForm()
+                Log.e("VehiculoActivity", "Error de red", e)
+                setupForm() // Si falla la red, permitimos intentar el registro
             }
         }
     }
 
     private fun setupForm() {
-        // Inicializar las vistas solo cuando se necesiten
         editModelo = findViewById(R.id.editModelo)
         editVin = findViewById(R.id.editVin)
         editPlaca = findViewById(R.id.editPlaca)
+        editFechaVehiculo = findViewById(R.id.editFechaVehiculo) // Vinculado
         switchVehiculoPropio = findViewById(R.id.switchVehiculoPropio)
         spinnerTipoVehiculo = findViewById(R.id.spinnerTipoVehiculo)
         spinnerServicio = findViewById(R.id.spinnerServicio)
         btnGuardar = findViewById(R.id.btnGuardar)
 
-        // Listeners
-        btnGuardar.setOnClickListener {
-            guardarVehiculo()
-        }
-
-        // Cargar datos para los spinners
+        btnGuardar.setOnClickListener { guardarVehiculo() }
         loadSpinnerData()
     }
 
     private fun loadSpinnerData() {
         lifecycleScope.launch {
             try {
-                // Cargar tipos de vehículo
+                // Cargar ambos datos en paralelo o secuencia
                 val tiposResponse = apiService.getTiposVehiculo(token)
+                val serviciosResponse = apiService.getServicios(token)
+
                 if (tiposResponse.isSuccessful) {
                     tiposVehiculoList = tiposResponse.body() ?: emptyList()
-                    val tipoAdapter = ArrayAdapter(this@VehiculoActivity, android.R.layout.simple_spinner_item, tiposVehiculoList)
-                    tipoAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerTipoVehiculo.adapter = tipoAdapter
-                } else {
-                    showError("Error al cargar tipos de vehículo")
+                    val adapter = ArrayAdapter(this@VehiculoActivity, android.R.layout.simple_spinner_item, tiposVehiculoList)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinnerTipoVehiculo.adapter = adapter
                 }
 
-                // Cargar servicios
-                val serviciosResponse = apiService.getServicios(token)
                 if (serviciosResponse.isSuccessful) {
                     serviciosList = serviciosResponse.body() ?: emptyList()
-                    val servicioAdapter = ArrayAdapter(this@VehiculoActivity, android.R.layout.simple_spinner_item, serviciosList)
-                    servicioAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                    spinnerServicio.adapter = servicioAdapter
-                } else {
-                    showError("Error al cargar servicios")
+                    val adapter = ArrayAdapter(this@VehiculoActivity, android.R.layout.simple_spinner_item, serviciosList)
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                    spinnerServicio.adapter = adapter
                 }
-
             } catch (e: Exception) {
-                Log.e("VehiculoActivity", "Error al cargar datos de spinners", e)
-                showError(e.message ?: "Error desconocido")
+                showError("Error al cargar datos: ${e.message}")
             }
         }
     }
@@ -187,7 +155,7 @@ class VehiculoActivity : AppCompatActivity() {
         val selectedServicio = spinnerServicio.selectedItem as? Servicio
 
         if (selectedTipo == null || selectedServicio == null) {
-            showError("Selecciona un tipo de vehículo y un servicio")
+            showError("Selecciona tipo y servicio")
             return
         }
 
@@ -197,12 +165,12 @@ class VehiculoActivity : AppCompatActivity() {
             placa = editPlaca.text.toString().trim(),
             propio = switchVehiculoPropio.isChecked,
             fkTipoDeVehiculo = selectedTipo.id,
-            fkServicio = selectedServicio.id
+            fkServicio = selectedServicio.id,
+            fecha = editFechaVehiculo.text.toString().trim()
         )
 
-        // Validaciones básicas
-        if (vehiculo.modelo.isEmpty() || vehiculo.vin.isEmpty() || vehiculo.placa.isEmpty()){
-            showError("Modelo, VIN y Placa son obligatorios")
+        if (vehiculo.modelo.isEmpty() || vehiculo.vin.isEmpty() || vehiculo.placa.isEmpty()) {
+            showError("Completa los campos obligatorios")
             return
         }
 
@@ -210,24 +178,24 @@ class VehiculoActivity : AppCompatActivity() {
             try {
                 val response = apiService.createVehiculo(token, vehiculo)
                 if (response.isSuccessful) {
-                    Toast.makeText(this@VehiculoActivity, "Vehículo guardado con éxito", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this@VehiculoActivity, HomeActivity::class.java))
-                    finishAffinity()
+                    Toast.makeText(this@VehiculoActivity, "Vehículo guardado", Toast.LENGTH_SHORT).show()
+                    navegarAHome()
                 } else {
-                    val errorBody = response.errorBody()?.string() ?: "Error desconocido"
-                    Log.e("VehiculoActivity", "Fallo al guardar. Código: ${response.code()}, Mensaje: $errorBody")
-                    showError("Fallo al guardar: $errorBody")
+                    showError("Error del servidor: ${response.code()}")
                 }
             } catch (e: Exception) {
-                Log.e("VehiculoActivity", "Error al guardar vehículo", e)
-                showError(e.message ?: "Error desconocido")
+                showError("Error: ${e.message}")
             }
         }
     }
 
+    private fun navegarAHome() {
+        startActivity(Intent(this, HomeActivity::class.java))
+        finishAffinity() // Cierra todas las actividades previas (Login, Registro, etc.)
+    }
+
     private fun getStoredToken(): String {
-        val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
-        return prefs.getString("auth_token", "") ?: ""
+        return getSharedPreferences("auth_prefs", MODE_PRIVATE).getString("auth_token", "") ?: ""
     }
 
     private fun showError(message: String) {

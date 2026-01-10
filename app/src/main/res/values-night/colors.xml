@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="fondo_principal">#0B1A2A</color>
+    <color name="header_barra">#132C45</color>
+    <color name="superficie_card">#1C2B3A</color>
+    <color name="fondo_gradient">#0E2238</color>
+
+    <color name="boton_principal">#1F3F66</color>
+    <color name="icono_activo">#2F6DB3</color>
+    <color name="indicador_ubicacion">#2E86FF</color>
+    <color name="acento_ambar">#FFC107</color>
+    <color name="acento_alerta">#FFB703</color>
+    <color name="acento_peligro">#F4A900</color>
+
+    <color name="estado_ok">#2E8B6F</color>
+
+    <color name="texto_principal">#EAEAEA</color> <color name="texto_secundario">#B0B7C3</color>
+    <color name="texto_desactivado">#7A8694</color>
+    <color name="texto_on_dark">#EAEAEA</color>
+    <color name="blanco">#0C0A61</color>
+    <color name="rojo_google">#E57373</color>
+</resources>
