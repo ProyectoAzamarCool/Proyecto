@@ -45,7 +45,8 @@
         <!-- ================= ACTIVIDAD PRINCIPAL (SIN CAMBIOS) ================= -->
         <activity
             android:name=".LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -55,31 +56,37 @@
         <!-- ================= ACTIVIDADES EXISTENTES ================= -->
         <activity
             android:name=".RegisterActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".ProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".VehiculoActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".HomeActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <!-- ================= ACTIVIDADES AGREGADAS ================= -->
 
         <!-- MAPA -->
         <activity
             android:name=".MapActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <!-- MAIN DEL SEGUNDO PROYECTO (SIN LAUNCHER) -->
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="androidx.core.content.FileProvider"
