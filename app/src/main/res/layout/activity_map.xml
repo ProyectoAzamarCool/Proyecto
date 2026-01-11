@@ -1,7 +1,197 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fondo_principal" />
+    android:background="@color/fondo_principal">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MapActivity" />
+
+    <View
+        android:id="@+id/overlayCerrar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/panelAudios"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/superficie_card"
+        android:elevation="20dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:translationX="-280dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:letterSpacing="0.1"
+            android:paddingBottom="20dp"
+            android:text="EVIDENCIA"
+            android:textColor="@color/texto_principal"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerAudios"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="20dp" />
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnMostrarAudios"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="50dp"
+        app:fabSize="mini"
+        app:maxImageSize="35dp"
+        app:elevation="6dp"
+        android:src="@android:drawable/ic_menu_recent_history"
+        app:backgroundTint="@color/acento_evidencia"
+        app:tint="@color/blanco"
+        android:contentDescription="Ver Evidencia" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardInfoLegal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/superficie_card"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="12dp">
+
+        <LinearLayout
+            android:id="@+id/contenedorCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/txtNombreCalle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/texto_principal"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtDetalleCalle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/texto_secundario"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="15dp"
+                android:background="#33AAAAAA" />
+
+            <TextView
+                android:id="@+id/txtVelocidadCalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="15dp"
+                android:paddingVertical="6dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/menuGrabacion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="190dp"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/superficie_card"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="15dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageButton
+                android:id="@+id/btnPausar"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/bg_boton_circular"
+                android:backgroundTint="@color/azul_medio"
+                android:src="@android:drawable/ic_media_pause"
+                app:tint="@color/blanco" />
+
+            <ImageButton
+                android:id="@+id/btnReanudar"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/bg_boton_circular"
+                android:backgroundTint="@color/estado_ok"
+                android:src="@android:drawable/ic_media_play"
+                android:visibility="gone"
+                app:tint="@color/blanco" />
+
+            <View
+                android:layout_width="12dp"
+                android:layout_height="1dp" />
+
+            <ImageButton
+                android:id="@+id/btnDetener"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="10dp"
+                android:scaleType="fitCenter"
+                android:background="@drawable/bg_boton_circular"
+                android:backgroundTint="@color/rojo_google"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/blanco" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnPanico"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="105dp"
+        android:contentDescription="Botón SOS"
+        android:src="@android:drawable/ic_btn_speak_now"
+        app:backgroundTint="@color/acento_sos"
+        app:borderWidth="0dp"
+        app:elevation="10dp"
+        app:fabCustomSize="65dp"
+        app:maxImageSize="50dp"
+        app:tint="@color/blanco" />
+
+</FrameLayout>

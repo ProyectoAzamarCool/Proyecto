@@ -74,6 +74,7 @@ dependencies {
     // ================= GOOGLE MAPS (AGREGADO) =================
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.maps.android:android-maps-utils:3.8.2")
 
 
     // ================= ANDROIDX =================
