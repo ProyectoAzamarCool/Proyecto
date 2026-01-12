@@ -5,6 +5,59 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/fondo_principal"
     tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/logo_bienvenida"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_marginBottom="25dp"
+            android:padding="30dp"
+            android:src="@mipmap/ic_launcher_foreground"
+            app:tint="@null"
+            android:background="@color/superficie_card"
+            app:shapeAppearanceOverlay="@style/CircleImage"
+            app:strokeColor="@color/texto_desactivado"
+            app:strokeWidth="1dp"
+            android:elevation="4dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sin SorJuanas"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@color/texto_principal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asistente Vial Inteligente"
+            android:textSize="16sp"
+            android:textColor="@color/texto_secundario"
+            android:layout_marginTop="4dp"
+            android:letterSpacing="0.05" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="60dp"
+        android:indeterminateTint="@color/acento_ambar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

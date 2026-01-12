@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/fondo_principal"
+    android:fillViewport="true"> <LinearLayout
+    android:orientation="vertical"
+    android:padding="25dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Datos Personales"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/texto_principal"
+        android:layout_marginBottom="20dp" />
+
+    <EditText
+        android:id="@+id/editNombre"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Nombre"
+        android:background="@drawable/rounded_input"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:padding="12dp"
+        android:textColor="@color/texto_principal"
+        android:textColorHint="@color/texto_secundario" />
+
+    <EditText
+        android:id="@+id/editApellidoP"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Apellido paterno"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_input"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:padding="12dp"
+        android:textColor="@color/texto_principal"
+        android:textColorHint="@color/texto_secundario" />
+
+    <EditText
+        android:id="@+id/editApellidoM"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Apellido materno"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_input"
+        android:inputType="textPersonName"
+        android:maxLines="1"
+        android:padding="12dp"
+        android:textColor="@color/texto_principal"
+        android:textColorHint="@color/texto_secundario" />
+
+    <EditText
+        android:id="@+id/editFecha"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Fecha de nacimiento (YYYY-MM-DD)"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_input"
+        android:focusable="false"
+        android:clickable="true"
+        android:padding="12dp"
+        android:textColor="@color/texto_principal"
+        android:textColorHint="@color/texto_secundario" />
+
+    <EditText
+        android:id="@+id/editTelefono"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="Teléfono"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_input"
+        android:inputType="phone"
+        android:maxLines="1"
+        android:padding="12dp"
+        android:textColor="@color/texto_principal"
+        android:textColorHint="@color/texto_secundario" />
+
+    <Button
+        android:id="@+id/btnGuardar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Guardar y continuar"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/boton_principal"
+        android:textColor="@color/texto_on_dark"
+        app:cornerRadius="8dp" />
+
+</LinearLayout>
+</ScrollView>
