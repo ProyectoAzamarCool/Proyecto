@@ -32,18 +32,27 @@
             android:textColor="@color/texto_principal"
             android:textColorHint="@color/texto_secundario" />
 
-        <EditText
-            android:id="@+id/editPassword"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:hint="Contraseña"
-            android:inputType="textPassword"
+            android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:background="@drawable/rounded_input"
-            android:maxLines="1"
-            android:padding="12dp"
-            android:textColor="@color/texto_principal"
-            android:textColorHint="@color/texto_secundario" />
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/texto_secundario">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editPassword"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Contraseña"
+                android:inputType="textPassword"
+                android:background="@drawable/rounded_input"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:textColor="@color/texto_principal"
+                android:textColorHint="@color/texto_secundario" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <CheckBox
             android:id="@+id/checkTerms"

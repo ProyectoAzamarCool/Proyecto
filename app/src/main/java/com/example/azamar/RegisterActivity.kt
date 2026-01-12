@@ -54,6 +54,7 @@ class RegisterActivity : AppCompatActivity() {
                         prefs.edit().putBoolean("termsAccepted", true).apply()
                         Toast.makeText(this, "Cuenta creada exitosamente", Toast.LENGTH_SHORT).show()
                         
+
                         val intent = Intent(this, ProfileActivity::class.java)
                         startActivity(intent)
                         finish()

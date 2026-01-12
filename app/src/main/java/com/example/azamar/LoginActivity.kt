@@ -28,10 +28,8 @@ class LoginActivity : AppCompatActivity() {
         // --- COMPROBACIÓN DE SESIÓN ACTIVA ---
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            // Si hay sesión, refrescar el token antes de continuar para evitar errores 403.
             refreshSessionAndNavigate(currentUser)
         } else {
-            // Si no hay sesión, mostrar la pantalla de login.
             setupLoginUI()
         }
     }
@@ -41,31 +39,24 @@ class LoginActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 val idToken = task.result?.token
                 if (idToken != null) {
-                    // Guardar el token fresco.
                     val prefs = getSharedPreferences("auth_prefs", Context.MODE_PRIVATE)
                     prefs.edit().putString("auth_token", idToken).apply()
-                    // Navegar a la siguiente pantalla.
                     startActivity(Intent(this, ProfileActivity::class.java))
                     finish()
                 } else {
-                    // Caso raro: no se obtuvo token. Forzar login.
-                    Toast.makeText(this, "No se pudo verificar tu sesión. Por favor, inicia sesión.", Toast.LENGTH_LONG).show()
                     setupLoginUI()
                 }
             } else {
-                // Fallo al refrescar. Forzar login.
-                Toast.makeText(this, "Tu sesión ha expirado. Por favor, inicia sesión de nuevo.", Toast.LENGTH_LONG).show()
                 setupLoginUI()
             }
         }
     }
 
     private fun setupLoginUI() {
-        // Inicialización normal de la pantalla de login.
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // --- GOOGLE SIGN IN ---
+        // --- CONFIGURACIÓN DE GOOGLE SIGN IN ---
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -74,9 +65,11 @@ class LoginActivity : AppCompatActivity() {
         googleClient = GoogleSignIn.getClient(this, gso)
 
         // --- LISTENERS ---
+        
+        // Login normal
         binding.btnLogin.setOnClickListener {
-            val email = binding.editEmail.text.toString()
-            val password = binding.editPassword.text.toString()
+            val email = binding.editEmail.text.toString().trim()
+            val password = binding.editPassword.text.toString().trim()
 
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 loginUser(email, password)
@@ -85,15 +78,11 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-        // --- LÍNEA MODIFICADA ---
-        // Se comenta esta línea para evitar el error de compilación.
-        // DEBES añadir el botón con id 'btnGoogleLogin' a tu XML y luego descomentar esto.
-        /*
+        // --- CORRECCIÓN: Usando el ID correcto btnGoogleLogin ---
         binding.btnGoogleLogin.setOnClickListener {
             val signInIntent = googleClient.signInIntent
             startActivityForResult(signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE)
         }
-        */
 
         binding.btnGoRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -110,7 +99,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     handleSuccessfulLogin()
                 } else {
-                    Toast.makeText(this, "Error de inicio de sesión: ${task.exception?.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Error: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
             }
     }
@@ -119,19 +108,23 @@ class LoginActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
-            val result = GoogleSignIn.getSignedInAccountFromIntent(data)
-            if (result.isSuccessful) {
-                val account = result.result
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(com.google.android.gms.common.api.ApiException::class.java)!!
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
 
                 auth.signInWithCredential(credential)
-                    .addOnSuccessListener { handleSuccessfulLogin() }
-                    .addOnFailureListener { Toast.makeText(this, "Error de autenticación con Google: ${it.message}", Toast.LENGTH_SHORT).show() }
-
-            } else {
-                val exception = result.exception
-                Log.w("LoginActivity", "Inicio de sesión con Google fallido", exception)
-                Toast.makeText(this, "Inicio de sesión con Google fallido.", Toast.LENGTH_LONG).show()
+                    .addOnCompleteListener { authTask ->
+                        if (authTask.isSuccessful) {
+                            handleSuccessfulLogin()
+                        } else {
+                            Log.e("LoginActivity", "Error Firebase con Google", authTask.exception)
+                            Toast.makeText(this, "Error de Firebase: ${authTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+            } catch (e: Exception) {
+                Log.e("LoginActivity", "Error Google Sign In", e)
+                Toast.makeText(this, "Cancelado o error de red: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -141,18 +134,12 @@ class LoginActivity : AppCompatActivity() {
         user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->
             if (tokenTask.isSuccessful) {
                 val idToken = tokenTask.result?.token
-                if (idToken != null) {
-                    val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
-                    prefs.edit().putString("auth_token", idToken).apply()
+                val prefs = getSharedPreferences("auth_prefs", MODE_PRIVATE)
+                prefs.edit().putString("auth_token", idToken).apply()
 
-                    Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    finish()
-                } else {
-                    Toast.makeText(this, "Error: No se pudo obtener el token.", Toast.LENGTH_LONG).show()
-                }
-            } else {
-                Toast.makeText(this, "Error al obtener token: ${tokenTask.exception?.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, ProfileActivity::class.java))
+                finish()
             }
         }
     }
