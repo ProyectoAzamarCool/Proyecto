@@ -20,10 +20,24 @@
 
     <color name="estado_ok">#2E8B6F</color>
 
-    <color name="texto_principal">#212121</color> <color name="texto_secundario">#757575</color>
+    <color name="texto_principal">#212121</color>
+    <color name="texto_secundario">#757575</color>
     <color name="texto_desactivado">#9E9E9E</color>
     <color name="texto_on_dark">#FFFFFF</color>
 
     <color name="indicador_ubicacion">#212121</color>
+
+<!--    Colores para el mapa-->
+    <color name="bg_zona_roja">#FFEBEE</color>
+    <color name="txt_zona_roja">#C62828</color>
+
+    <color name="bg_zona_amarilla">#FFFDE7</color>
+    <color name="txt_zona_amarilla">#FBC02D</color>
+
+    <color name="bg_zona_verde">#E8F5E9</color>
+    <color name="txt_zona_verde">#2E7D32</color>
+
+    <color name="acento_evidencia">@color/azul_medio</color>
+    <color name="acento_sos">#FFB800</color>
 
 </resources>
