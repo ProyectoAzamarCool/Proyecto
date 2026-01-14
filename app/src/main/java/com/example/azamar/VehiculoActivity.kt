@@ -13,6 +13,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.POST
+import android.app.DatePickerDialog
+import java.util.Calendar
 
 // --- Data Classes ---
 
@@ -114,14 +116,49 @@ class VehiculoActivity : AppCompatActivity() {
         editModelo = findViewById(R.id.editModelo)
         editVin = findViewById(R.id.editVin)
         editPlaca = findViewById(R.id.editPlaca)
-        editFechaVehiculo = findViewById(R.id.editFechaVehiculo) // Vinculado
+        editFechaVehiculo = findViewById(R.id.editFechaVehiculo)
         switchVehiculoPropio = findViewById(R.id.switchVehiculoPropio)
         spinnerTipoVehiculo = findViewById(R.id.spinnerTipoVehiculo)
         spinnerServicio = findViewById(R.id.spinnerServicio)
         btnGuardar = findViewById(R.id.btnGuardar)
 
         btnGuardar.setOnClickListener { guardarVehiculo() }
+
+        // Configurar el selector de fecha
+        setupDatePicker()
+
         loadSpinnerData()
+    }
+
+    private fun setupDatePicker() {
+        editFechaVehiculo.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    // Formatear la fecha como YYYY-MM-DD
+                    val fechaFormateada = String.format(
+                        "%04d-%02d-%02d",
+                        selectedYear,
+                        selectedMonth + 1, // Los meses empiezan en 0
+                        selectedDay
+                    )
+                    editFechaVehiculo.setText(fechaFormateada)
+                },
+                year,
+                month,
+                day
+            )
+
+            // Opcional: establecer fecha máxima (hoy) para evitar fechas futuras
+            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
+            datePickerDialog.show()
+        }
     }
 
     private fun loadSpinnerData() {
@@ -159,6 +196,13 @@ class VehiculoActivity : AppCompatActivity() {
             return
         }
 
+        val fechaTexto = editFechaVehiculo.text.toString().trim()
+
+        if (fechaTexto.isEmpty()) {
+            showError("Selecciona una fecha para el vehículo")
+            return
+        }
+
         val vehiculo = Vehiculo(
             modelo = editModelo.text.toString().trim(),
             vin = editVin.text.toString().trim(),
@@ -166,7 +210,7 @@ class VehiculoActivity : AppCompatActivity() {
             propio = switchVehiculoPropio.isChecked,
             fkTipoDeVehiculo = selectedTipo.id,
             fkServicio = selectedServicio.id,
-            fecha = editFechaVehiculo.text.toString().trim()
+            fecha = fechaTexto
         )
 
         if (vehiculo.modelo.isEmpty() || vehiculo.vin.isEmpty() || vehiculo.placa.isEmpty()) {
