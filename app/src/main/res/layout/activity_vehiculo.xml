@@ -53,16 +53,28 @@
             android:background="@drawable/rounded_input"
             android:padding="12dp" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Año/fecha del vehículo"
+            android:textSize="16sp"
+            android:textColor="@color/texto_principal"
+            android:layout_marginTop="20dp" />
+
         <EditText
             android:id="@+id/editFechaVehiculo"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:hint="Año/fecha (YYYY-MM-DD)"
-            android:layout_marginTop="15dp"
+            android:hint="Seleccionar fecha (YYYY-MM-DD)"
+            android:layout_marginTop="8dp"
             android:textColor="@color/texto_principal"
             android:textColorHint="@color/texto_secundario"
             android:background="@drawable/rounded_input"
-            android:padding="12dp" />
+            android:padding="12dp"
+            android:focusable="false"
+            android:clickable="true"
+            android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+            android:drawablePadding="8dp" />
 
         <LinearLayout
             android:orientation="horizontal"
