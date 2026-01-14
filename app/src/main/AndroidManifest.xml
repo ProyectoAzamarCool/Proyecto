@@ -71,6 +71,11 @@
 
         <!-- ================= ACTIVIDADES AGREGADAS ================= -->
 
+        <!-- RECUPERAR CONTRASEÑA (CORRECCIÓN) -->
+        <activity
+            android:name=".RecoverPasswordActivity"
+            android:exported="false" />
+
         <!-- MAPA -->
         <activity
             android:name=".MapActivity"
