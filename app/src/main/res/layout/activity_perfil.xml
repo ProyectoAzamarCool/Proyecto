@@ -314,12 +314,18 @@
                 android:layout_marginTop="8dp"
                 android:hint="Fecha Nacimiento (YYYY-MM-DD)"
                 app:boxBackgroundColor="@color/superficie_card"
-                app:hintTextColor="@color/acento_ambar">
+                app:hintTextColor="@color/acento_ambar"
+                app:endIconMode="custom"
+                app:endIconDrawable="@android:drawable/ic_menu_my_calendar"
+                app:endIconTint="@color/acento_ambar">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/fechaInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/texto_principal" />
+                    android:textColor="@color/texto_principal"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:inputType="none" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

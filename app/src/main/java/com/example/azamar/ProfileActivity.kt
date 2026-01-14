@@ -1,5 +1,6 @@
 package com.example.azamar
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -35,6 +36,8 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 import java.io.File
 import java.io.FileOutputStream
+import android.app.DatePickerDialog
+import java.util.Calendar
 
 // --- Data Classes ---
 data class Usuario(
@@ -402,6 +405,54 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("DefaultLocale")
+    private fun setupDatePickerForProfile() {
+        fechaInput.setOnClickListener {
+            val calendar = Calendar.getInstance()
+
+            // Si ya hay una fecha seleccionada, usarla como inicial
+            val currentDate = fechaInput.text.toString()
+            if (currentDate.isNotEmpty() && currentDate.matches(Regex("\\d{4}-\\d{2}-\\d{2}"))) {
+                try {
+                    val parts = currentDate.split("-")
+                    calendar.set(parts[0].toInt(), parts[1].toInt() - 1, parts[2].toInt())
+                } catch (e: Exception) {
+                    // Si hay error parseando, usar fecha actual
+                }
+            }
+
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+            val datePickerDialog = DatePickerDialog(
+                this,
+                { _, selectedYear, selectedMonth, selectedDay ->
+                    // Formatear la fecha como YYYY-MM-DD
+                    val fechaFormateada = String.format(
+                        "%04d-%02d-%02d",
+                        selectedYear,
+                        selectedMonth + 1,
+                        selectedDay
+                    )
+                    fechaInput.setText(fechaFormateada)
+                },
+                year,
+                month,
+                day
+            )
+
+            // Establecer fecha máxima como hoy (no se pueden ingresar fechas futuras)
+            datePickerDialog.datePicker.maxDate = System.currentTimeMillis()
+
+            // Opcional: establecer fecha mínima (por ejemplo, hace 100 años)
+            calendar.add(Calendar.YEAR, -100)
+            datePickerDialog.datePicker.minDate = calendar.timeInMillis
+
+            datePickerDialog.show()
+        }
+    }
+
     private fun initializeFormViews() {
         nombreInput = findViewById(R.id.nombreInput)
         apellidoPatInput = findViewById(R.id.apellidoPatInput)
@@ -416,6 +467,7 @@ class ProfileActivity : AppCompatActivity() {
         initializeFormViews()
         formTitle.text = "Crear Perfil"
         clearForm()
+        setupDatePickerForProfile() // Agregar esta línea
         btnGuardar.setOnClickListener { saveProfile() }
         profileViewContainer.visibility = View.GONE
         profileFormContainer.visibility = View.VISIBLE
@@ -431,6 +483,7 @@ class ProfileActivity : AppCompatActivity() {
             fechaInput.setText(it.fechaNacimiento.substringBefore('T'))
             telefonoInput.setText(it.telefono)
 
+            setupDatePickerForProfile() // Agregar esta línea
             btnGuardar.setOnClickListener { saveProfile() }
             profileViewContainer.visibility = View.GONE
             profileFormContainer.visibility = View.VISIBLE
