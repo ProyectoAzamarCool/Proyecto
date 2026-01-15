@@ -5,15 +5,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import okhttp3.OkHttpClient
 import kotlin.jvm.java
 
-// 🛑 IMPORTACIÓN DE AuthInterceptor YA NO DEBE EXISTIR O DEBE ESTAR COMENTADA
 
 object RetrofitClient {
 
     private const val BASE_URL = "https://api-bqajzo735a-uc.a.run.app/"
 
-    // 🛑 CLIENTE SIN INTERCEPTOR DE SEGURIDAD
     private val client = OkHttpClient.Builder()
-        // .addInterceptor(AuthInterceptor()) // ¡COMENTADO TEMPORALMENTE!
         .build()
 
     private val retrofit: Retrofit by lazy {
